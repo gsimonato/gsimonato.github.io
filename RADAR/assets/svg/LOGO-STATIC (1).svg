@@ -99,7 +99,7 @@
     </filter>
 
     <!-- Gradientes -->
-    <radialGradient id="bg-glow-anim" cx="23%" cy="43%" r="60%">
+    <radialGradient id="bg-glow-anim" cx="23%" cy="43%" r="85%">
       <stop offset="0%" stop-color="#1E40AF" stop-opacity="0.9" />
       <stop offset="40%" stop-color="#334155" stop-opacity="0.95" />
       <stop offset="100%" stop-color="#0F172A" stop-opacity="1" />
@@ -145,15 +145,15 @@
 
   <!-- ================= BACKGROUND ================= -->
   <g id="background">
-    <rect width="1600" height="900" fill="#0F172A" />
-    <rect width="1600" height="900" fill="url(#bg-glow-anim)" />
-    <rect width="1600" height="900" fill="url(#red-ambient-glow-anim)" class="animated-glow" />
-    <rect width="1600" height="900" fill="url(#bottom-red-glow-anim)" />
+    <rect width="900" height="900" fill="#0F172A" />
+    <rect width="900" height="900" fill="url(#bg-glow-anim)" />
+    <rect width="900" height="900" fill="url(#red-ambient-glow-anim)" class="animated-glow" />
+    <rect width="900" height="900" fill="url(#bottom-red-glow-anim)" />
     
   </g>
 
   <!-- ================= ELEMENTO RADAR (ANIMADO) ================= -->
-  <g id="radar-system" transform="translate(20, 90)">
+  <g id="radar-system" transform="translate(20, 0)">
     
     <!-- Círculos e Eixos -->
     <g id="radar-grid" filter="url(#glow-cyan-anim)">
@@ -224,7 +224,7 @@
   </g>
 
   <!-- ================= TEXTO / TIPOGRAFIA ================= -->
-  <g id="typography" transform="translate(580, 70)">
+  <g id="typography" transform="translate(90, 700)">
     
     <g id="brand-radar" filter="url(#text-glow-anim)">
       <text x="0" y="140" font-family="'Montserrat', 'Arial Black', sans-serif" font-size="142" font-weight="900" letter-spacing="4">
@@ -232,39 +232,7 @@
         <tspan fill="#ffffff" dx="-40">ADAR</tspan>
       </text>
     </g>
-	
 
-    <g id="acronym-list" transform="translate(160, 230)">
-      <g transform="translate(0, 0)">
-        <rect x="0" y="0" width="48" height="48" rx="6" fill="url(#acronym-box-grad-anim)"  />
-        <text x="24" y="34" fill="#ffffff" font-family="'Montserrat', 'Arial Black', sans-serif" font-size="32" font-weight="900" text-anchor="middle">R</text>
-        <text x="55" y="33" fill="#ffffff" font-family="'Segoe UI', Arial, sans-serif" font-size="38" font-weight="400" letter-spacing="1">astreamento</text>
-      </g>
-
-      <g transform="translate(0, 70)">
-        <rect x="0" y="0" width="48" height="48" rx="6" fill="url(#acronym-box-grad-anim)" />
-        <text x="24" y="34" fill="#ffffff" font-family="'Montserrat', 'Arial Black', sans-serif" font-size="32" font-weight="900" text-anchor="middle">A</text>
-        <text x="55" y="33" fill="#ffffff" font-family="'Segoe UI', Arial, sans-serif" font-size="38" font-weight="400" letter-spacing="1">utomático de</text>
-      </g>
-
-      <g transform="translate(0, 140)">
-        <rect x="0" y="0" width="48" height="48" rx="6" fill="url(#acronym-box-grad-anim)" />
-        <text x="24" y="34" fill="#ffffff" font-family="'Montserrat', 'Arial Black', sans-serif" font-size="32" font-weight="900" text-anchor="middle">D</text>
-        <text x="55" y="33" fill="#ffffff" font-family="'Segoe UI', Arial, sans-serif" font-size="38" font-weight="400" letter-spacing="1">emandas,</text>
-      </g>
-
-      <g transform="translate(0, 210)">
-        <rect x="0" y="0" width="48" height="48" rx="6" fill="url(#acronym-box-grad-anim)" />
-        <text x="24" y="34" fill="#ffffff" font-family="'Montserrat', 'Arial Black', sans-serif" font-size="32" font-weight="900" text-anchor="middle">A</text>
-        <text x="55" y="33" fill="#ffffff" font-family="'Segoe UI', Arial, sans-serif" font-size="38" font-weight="400" letter-spacing="1">tividades e</text>
-      </g>
-
-      <g transform="translate(0, 280)">
-        <rect x="0" y="0" width="48" height="48" rx="6" fill="url(#acronym-box-grad-anim)" />
-        <text x="24" y="34" fill="#ffffff" font-family="'Montserrat', 'Arial Black', sans-serif" font-size="32" font-weight="900" text-anchor="middle">R</text>
-        <text x="55" y="33" fill="#ffffff" font-family="'Segoe UI', Arial, sans-serif" font-size="38" font-weight="400" letter-spacing="1">esponsáveis</text>
-      </g>
-    </g>
   </g>
 
 </svg>
