@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RADAR — A planilha que sua equipe já sabe usar, agora automatizada</title>
+<meta name="description" content="RADAR transforma o Google Sheets que sua equipe já usa em um sistema de acompanhamento de prazos, tarefas e responsáveis — com dashboard, emails e Telegram automáticos. Sem trocar de ferramenta.">
+<link rel="canonical" href="https://gsimonato.github.io/RADAR/">
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="RADAR — A planilha que sua equipe já sabe usar, agora automatizada">
+<meta property="og:description" content="Continua sendo Google Sheets. Agora com dashboard, emails automáticos e acompanhamento de tarefas.">
+<meta property="og:image" content="https://gsimonato.github.io/RADAR/assets/img/og-image.png">
+<meta property="og:url" content="https://gsimonato.github.io/RADAR/">
+<meta property="og:locale" content="pt_BR">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RADAR — A planilha que sua equipe já sabe usar, agora automatizada">
+<meta name="twitter:description" content="Continua sendo Google Sheets. Agora com dashboard, emails automáticos e acompanhamento de tarefas.">
+<meta name="twitter:image" content="https://gsimonato.github.io/RADAR/assets/img/og-image.png">
+
+<!-- Schema.org Product -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "RADAR — Rastreio Automático de Demandas, Atividades e Responsáveis",
+  "description": "Solução construída sobre Google Sheets que adiciona automações de gestão de tarefas, prazos e responsáveis para escritórios de engenharia, arquitetura e consultorias.",
+  "brand": { "@type": "Brand", "name": "Gustavo Simonato" },
+  "offers": {
+    "@type": "Offer",
+    "price": "67.00",
+    "priceCurrency": "BRL",
+    "availability": "https://schema.org/InStock",
+    "url": "https://gsimonato.github.io/RADAR/"
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/variables.css">
+<link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/animations.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="#" class="site-logo">
+      <img src="assets/img/logo.svg" alt="RADAR" width="28" height="28">
+      RADAR
+    </a>
+    <nav class="site-nav" aria-label="Navegação principal">
+      <div class="nav-links">
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#beneficios">Benefícios</a>
+        <a href="#comparativo">Comparativo</a>
+        <a href="#faq">Dúvidas</a>
+      </div>
+      <a href="#preco" class="btn btn-primary" style="margin-left: 1.5rem;">Quero usar o RADAR</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-text">
+      <span class="hero-eyebrow">Google Sheets · automatizado</span>
+      <h1>A planilha que tua equipe já sabe usar.<br>Agora ela <span class="accent">acompanha os prazos</span> por ti.</h1>
+      <p class="hero-sub">Continua sendo Google Sheets. Agora com dashboards, emails automáticos e acompanhamento de tarefas — sem aprender ferramenta nova, sem mudar de rotina.</p>
+      <div class="hero-cta-row">
+        <a href="#preco" class="btn btn-primary btn-lg">Quero usar o RADAR</a>
+        <a href="#demonstracao" class="btn btn-ghost btn-lg">Ver funcionando</a>
+      </div>
+      <p class="hero-cta-note" style="margin-top: 1.25rem;">// roda 100% dentro da sua conta Google</p>
+    </div>
+
+    <div class="hero-media">
+      <div class="cell-demo">
+        <div class="cell-demo-bar">
+          <span class="cell-demo-dot"></span>
+          <span>RADAR — TAREFAS</span>
+        </div>
+        <table class="cell-demo-table">
+          <thead>
+            <tr>
+              <th>Cliente / Projeto</th>
+              <th>Prazo</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Porto Alegre — PE</td>
+              <td>28/06/2026</td>
+              <td><span class="status-pill embreve">Em breve</span></td>
+            </tr>
+            <tr class="cell-demo-row" data-cell-demo-row>
+              <td>Verânopolis — FM</td>
+              <td>05/06/2026</td>
+              <td><span class="status-pill atrasado">Atrasado</span></td>
+            </tr>
+            <tr>
+              <td>Santa Maria — RC</td>
+              <td>12/08/2026</td>
+              <td><span class="status-pill noprazo">No prazo</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gridline-divider">
+
+<!-- DOR -->
+<section class="section-pad" id="dor">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">O problema</span>
+      <h2 class="section-title">O problema não é a planilha.</h2>
+      <p class="section-subtitle">É que uma planilha comum depende das pessoas lembrarem de tudo — e ninguém lembra de tudo, o tempo todo.</p>
+    </div>
+
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">✕</div>
+        <p>O cliente pergunta o andamento antes de você perceber que o prazo já passou.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">✕</div>
+        <p>Alguém sai de férias e ninguém mais sabe em que pé estavam as tarefas dele.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">✕</div>
+        <p>Cobrar prazo virou rotina de WhatsApp — e sempre esquece metade.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">✕</div>
+        <p>A "gestão de tarefas" hoje é uma aba de planilha que ninguém atualiza.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">✕</div>
+        <p>Retrabalho porque duas pessoas acharam que a outra ia entregar aquilo.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">✕</div>
+        <p>Reunião inteira só pra descobrir o que já devia estar visível em 30 segundos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gridline-divider">
+
+<!-- SOLUÇÃO -->
+<section class="section-pad" id="solucao" style="background: var(--color-bg-soft);">
+  <div class="container">
+    <div class="section-head center">
+      <span class="section-eyebrow">A virada</span>
+      <h2 class="section-title">E se a mesma planilha fizesse tudo isso sozinha?</h2>
+    </div>
+
+    <div class="flow-diagram">
+      <div class="flow-node">Google Sheets</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node is-primary">RADAR</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-branches">
+        <div class="flow-node">Dashboard</div>
+        <div class="flow-node">Emails</div>
+        <div class="flow-node">Telegram</div>
+        <div class="flow-node">Backup</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gridline-divider">
+
+<!-- COMO FUNCIONA -->
+<section class="section-pad" id="como-funciona">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Como funciona</span>
+      <h2 class="section-title">Nada muda na tua rotina.</h2>
+      <p class="section-subtitle">Você continua preenchendo a mesma planilha. O RADAR cuida do resto.</p>
+    </div>
+
+    <div class="how-block">
+      <div class="how-text">
+        <span class="how-step-label">01 · Cadastro</span>
+        <h3>Continua sendo uma planilha.</h3>
+        <p>Cliente, prazo, responsável. Você preenche do jeito que já preenche hoje — nada de tela nova pra aprender.</p>
+      </div>
+      <div class="how-media">
+        <img src="assets/img/demo-cadastro.gif" alt="Preenchimento de tarefa na planilha RADAR" loading="lazy">
+      </div>
+    </div>
+
+    <div class="how-block reverse">
+      <div class="how-text">
+        <span class="how-step-label">02 · Dashboard</span>
+        <h3>Em segundos, você sabe.</h3>
+        <p>Quem está atrasado. Quem está sobrecarregado. Quais projetos exigem atenção agora — tudo numa tela só.</p>
+      </div>
+      <div class="how-media">
+        <img src="assets/img/demo-dashboard.gif" alt="Dashboard automático do RADAR por engenheiro e por projeto" loading="lazy">
+      </div>
+    </div>
+
+    <div class="how-block">
+      <div class="how-text">
+        <span class="how-step-label">03 · Email</span>
+        <h3>Cada responsável recebe só as tarefas dele.</h3>
+        <p>Sem cobrar manualmente, sem lista gigante de todo mundo. Cada pessoa vê exatamente o que é dela.</p>
+      </div>
+      <div class="how-media">
+        <img src="assets/img/demo-email.gif" alt="Email automático individual com tarefas pendentes" loading="lazy">
+      </div>
+    </div>
+
+    <div class="how-block reverse">
+      <div class="how-text">
+        <span class="how-step-label">04 · Telegram</span>
+        <h3>As mesmas notificações, se preferir por lá.</h3>
+        <p>Pra quem prefere grupo a email, o mesmo alerta chega direto no Telegram.</p>
+      </div>
+      <div class="how-media">
+        <img src="assets/img/demo-telegram.gif" alt="Notificação automática via Telegram" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gridline-divider">
+
+<!-- BENEFÍCIOS -->
+<section class="section-pad" id="beneficios" style="background: var(--color-bg-soft);">
+  <div class="container">
+    <div class="section-head center">
+      <span class="section-eyebrow">O que vem incluso</span>
+      <h2 class="section-title">Tudo dentro da mesma planilha.</h2>
+    </div>
+
+    <div class="benefit-grid">
+      <div class="benefit-card"><span class="icon">📊</span><h4>Dashboard</h4><p>3 visões automáticas de carga e status</p></div>
+      <div class="benefit-card"><span class="icon">📧</span><h4>Emails</h4><p>Individuais, por responsável</p></div>
+      <div class="benefit-card"><span class="icon">✈️</span><h4>Telegram</h4><p>Notificação opcional em grupo</p></div>
+      <div class="benefit-card"><span class="icon">🛟</span><h4>Backup</h4><p>Automático antes de operações em massa</p></div>
+      <div class="benefit-card"><span class="icon">🔄</span><h4>Atualizações</h4><p>Incluídas, sem custo adicional</p></div>
+      <div class="benefit-card"><span class="icon">💳</span><h4>Sem mensalidade</h4><p>Pagamento único</p></div>
+      <div class="benefit-card"><span class="icon">⚙️</span><h4>Instalação simples</h4><p>Copiar e usar, sem setup longo</p></div>
+      <div class="benefit-card"><span class="icon">🔒</span><h4>100% Google</h4><p>Nada sai da sua conta</p></div>
+    </div>
+  </div>
+</section>
+
+<hr class="gridline-divider">
+
+<!-- COMPARATIVO -->
+<section class="section-pad" id="comparativo">
+  <div class="container">
+    <div class="section-head center">
+      <span class="section-eyebrow">Comparativo</span>
+      <h2 class="section-title">Planilha comum × RADAR</h2>
+    </div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Planilha comum</th>
+          <th class="col-radar">RADAR</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="compare-dash">—</span>Registra informações</td>
+          <td class="col-radar"><span class="compare-check">✓</span>Acompanha tarefas</td>
+        </tr>
+        <tr>
+          <td><span class="compare-dash">—</span>Depende das pessoas lembrarem</td>
+          <td class="col-radar"><span class="compare-check">✓</span>Lembra automaticamente</td>
+        </tr>
+        <tr>
+          <td><span class="compare-dash">—</span>Sem dashboard</td>
+          <td class="col-radar"><span class="compare-check">✓</span>Dashboard pronto</td>
+        </tr>
+        <tr>
+          <td><span class="compare-dash">—</span>Sem notificações</td>
+          <td class="col-radar"><span class="compare-check">✓</span>Emails automáticos</td>
+        </tr>
+        <tr>
+          <td><span class="compare-dash">—</span>Cobrança manual pelo WhatsApp</td>
+          <td class="col-radar"><span class="compare-check">✓</span>Link de WhatsApp pronto, sem cobrar</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="gridline-divider">
+
+<!-- PRA QUEM É / NÃO É -->
+<section class="section-pad" style="background: var(--color-bg-soft);">
+  <div class="container">
+    <div class="audience-grid">
+      <div class="audience-card">
+        <h3>Pra quem é</h3>
+        <ul class="audience-list">
+          <li><span class="mark-yes">✓</span>Escritórios de engenharia e arquitetura</li>
+          <li><span class="mark-yes">✓</span>Consultorias e pequenas equipes</li>
+          <li><span class="mark-yes">✓</span>Quem já usa (ou toparia usar) Google Sheets</li>
+          <li><span class="mark-yes">✓</span>Quem gerencia mais de um cliente/projeto ao mesmo tempo</li>
+        </ul>
+      </div>
+      <div class="audience-card">
+        <h3>Pra quem não é</h3>
+        <ul class="audience-list">
+          <li><span class="mark-no">✕</span>Quem quer trocar tudo por um ERP</li>
+          <li><span class="mark-no">✕</span>Quem já usa Monday, ClickUp ou similar e está satisfeito</li>
+          <li><span class="mark-no">✕</span>Quem procura aplicativo mobile nativo dedicado</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gridline-divider">
+
+<!-- DEMONSTRAÇÃO -->
+<section class="section-pad" id="demonstracao">
+  <div class="container">
+    <div class="section-head center">
+      <span class="section-eyebrow">Demonstração</span>
+      <h2 class="section-title">Veja funcionando, sem narração.</h2>
+    </div>
+
+    <div class="demo-video-wrap">
+      <div class="video-embed">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/T_ZysDNsx3A?autoplay=1&mute=1&loop=1&playlist=T_ZysDNsx3A&controls=0&modestbranding=1&rel=0"
+          title="Demonstração completa do RADAR"
+          loading="lazy"
+          allow="autoplay; encrypted-media"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gridline-divider">
+
+<!-- FAQ -->
+<section class="section-pad" id="faq" style="background: var(--color-bg-soft);">
+  <div class="container">
+    <div class="section-head center">
+      <span class="section-eyebrow">Dúvidas frequentes</span>
+      <h2 class="section-title">Perguntas frequentes</h2>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Preciso saber programar?
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Não. Você preenche a planilha normalmente — toda a automação já vem pronta.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Meus dados ficam seguros?
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Sim — o script roda inteiramente dentro da sua própria conta Google. Nada é enviado pra nenhum servidor externo, nem pra gente.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Funciona pra qualquer tipo de projeto, ou só engenharia?
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Qualquer tipo — clientes, obras, consultorias, o que for.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          E se eu tiver dúvida na instalação?
+          <span class="faq-icon"></span>
+        </button>
+        <!-- [PENDÊNCIA] Canal de suporte ainda não definido -->
+        <div class="faq-answer"><div class="faq-answer-inner">[ canal de suporte a definir — vídeo passo a passo e/ou atendimento direto ]</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Funciona no celular?
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Funciona pelo app do Google Sheets, mas a experiência é melhor no computador — é uma planilha, não um app dedicado.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="section-pad" id="preco">
+  <div class="container">
+    <div class="final-cta">
+      <h2>Sua próxima segunda-feira pode começar sem aquela rodada de "como tá isso?"</h2>
+      <p>Pagamento único. Sem mensalidade.</p>
+
+      <!-- [PENDÊNCIA] Garantia e link de checkout ainda não definidos -->
+      <span class="launch-badge">Preço de lançamento — primeiras compras</span>
+      <div class="price-tag">R$ 67</div>
+      <div class="price-note">atualizações incluídas · pagamento único</div>
+      <div class="guarantee-badge">🛡 garantia — [ a definir ]</div>
+      <br>
+      <a href="#" class="btn btn-primary btn-lg">Quero usar o RADAR</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>RADAR — desenvolvido por Gustavo Simonato</p>
+  </div>
+</footer>
+
+<script src="assets/js/navigation.js"></script>
+<script src="assets/js/faq.js"></script>
+<script src="assets/js/animations.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

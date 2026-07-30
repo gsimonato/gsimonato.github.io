@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gsimonato.github.io/RADAR/sitemap.xml

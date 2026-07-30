@@ -1,0 +1,35 @@
+/* Page-load do hero */
+.hero-eyebrow, .hero h1, .hero-sub, .hero-cta-row, .hero-media {
+  opacity: 0;
+  animation: fadeUp 0.6s var(--ease) forwards;
+}
+.hero-eyebrow { animation-delay: 0.05s; }
+.hero h1 { animation-delay: 0.12s; }
+.hero-sub { animation-delay: 0.2s; }
+.hero-cta-row { animation-delay: 0.28s; }
+.hero-media { animation-delay: 0.18s; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scroll reveal genérico */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* FAQ */
+.faq-item.is-open .faq-answer { max-height: 400px; }
+
+/* Cell demo — mudança de status ambient */
+@keyframes cellPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+  50% { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.06); }
+}

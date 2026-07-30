@@ -1,0 +1,13 @@
+title: RADAR
+description: "A planilha que sua equipe já sabe usar. Agora automatizada."
+url: "https://gsimonato.github.io"
+baseurl: "/RADAR"
+lang: pt-BR
+
+markdown: kramdown
+plugins: []
+
+exclude:
+  - README.md
+  - docs/
+  - "*.md"
