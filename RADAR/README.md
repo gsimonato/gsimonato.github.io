@@ -28,8 +28,8 @@ RADAR/
 │   │   ├── navigation.js        # menu mobile
 │   │   ├── faq.js               # acordeão
 │   │   └── animations.js        # intersection observer + status pill cycling
-│   ├── img/                     # GIFs de demo + logo + og-image
-│   └── video/                   # vídeo completo (pendente)
+│   ├── img/                     # GIFs de demo + logo + og-image + poster do vídeo
+│   └── video/                    # vídeo completo (demo-completo.mp4)
 └── docs/
     └── PENDENCIAS.md
 ```

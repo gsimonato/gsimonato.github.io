@@ -7,10 +7,7 @@
 
 ## Resolvido
 - ~~`demo-telegram.gif` mostrando Gmail~~ — arquivo corrigido, agora mostra Telegram.
-- ~~Vídeo completo~~ — embutido via YouTube (`https://youtu.be/T_ZysDNsx3A`), autoplay/mute/loop, sem controles.
 - ~~Preço~~ — R$ 67, "preço de lançamento para as primeiras compras".
 - ~~Garantia~~ — 7 dias incondicional (CDC art. 49). Aplicada no CTA final e em novo item de FAQ.
-- ~~Suporte~~ — email (gsimonato.gss@gmail.com) + WhatsApp. Aplicado no FAQ.
-
-## Nota
-- Telefone/WhatsApp de suporte **removido da página pública** por decisão do usuário — fica só no produto (planilha entregue). Página usa apenas email.
+- ~~Suporte~~ — email (gsimonato.gss@gmail.com) + WhatsApp. Aplicado no FAQ (telefone removido da página pública por decisão do usuário — fica só no produto).
+- ~~Vídeo completo~~ — trocado o embed do YouTube por `<video>` nativo hospedado no repo (`assets/video/demo-completo.mp4`, ~3.8MB, H.264, sem áudio, faststart) — YouTube estava limitando a qualidade real do embed. Poster em `assets/img/video-poster.jpg`.
