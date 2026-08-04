@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>RADAR — Pare de perguntar "como tá aquele projeto?"</title>
+<meta name="description" content="A planilha do Google Sheets que avisa sozinha quem está atrasado, quem precisa ser cobrado e o que já está no prazo. Sem sistema novo, sem mensalidade.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-0:#080B10;
+  --bg-1:#0D1219;
+  --bg-2:#121924;
+  --bg-card:#161F2C;
+  --line:rgba(94,148,255,0.14);
+  --line-soft:rgba(94,148,255,0.07);
+  --ink-0:#EDF1F7;
+  --ink-1:#AEB9C9;
+  --ink-2:#77839A;
+  --blue:#3E7BFA;
+  --blue-glow:#6FA1FF;
+  --cyan:#5FE3D6;
+  --red:#FF5C6C;
+  --amber:#FFB144;
+  --green:#3DDC84;
+  --grey:#8A93A3;
+  --font-display:'Sora',sans-serif;
+  --font-body:'Onest',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius-pill:999px;
+  --radius-card:18px;
+  --maxw:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg-0);
+  color:var(--ink-0);
+  font-family:var(--font-body);
+  font-size:17px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img,video{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.eyebrow::before{
+  content:'';
+  width:7px;height:7px;border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 8px var(--cyan);
+  animation:pulse-dot 1.6s ease-in-out infinite;
+}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.35}}
+h1,h2,h3{font-family:var(--font-display);font-weight:700;letter-spacing:-0.01em;color:var(--ink-0);}
+h2{font-size:clamp(28px,4vw,40px);margin-bottom:14px;}
+h3{font-size:20px;}
+.section{padding:96px 0;position:relative;}
+.section.bg-1{background:var(--bg-1);}
+.section.bg-2{background:var(--bg-2);}
+.section-head{max-width:680px;margin-bottom:52px;}
+.section-head p{color:var(--ink-1);font-size:18px;margin-top:12px;}
+.blueprint-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--line-soft) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 40%,transparent 100%);
+  pointer-events:none;
+}
+
+/* ---------- NAV ---------- */
+nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(8,11,16,.82);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px;}
+.logo{font-family:var(--font-mono);font-weight:700;font-size:17px;letter-spacing:.02em;color:var(--ink-0);display:flex;align-items:center;gap:10px;}
+.logo .dot{width:9px;height:9px;border-radius:50%;background:var(--blue);box-shadow:0 0 10px var(--blue-glow);}
+.btn{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:15px;
+  padding:13px 26px;
+  border-radius:var(--radius-pill);
+  display:inline-block;
+  border:none;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.btn-primary{background:linear-gradient(135deg,var(--blue),#5B4CF0);color:#fff;box-shadow:0 8px 24px -6px rgba(62,123,250,.55);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px -6px rgba(62,123,250,.7);}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink-0);}
+.btn-sm{padding:10px 20px;font-size:13.5px;}
+
+/* ---------- HERO ---------- */
+.hero{padding:84px 0 60px;position:relative;overflow:hidden;}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;}
+.hero h1{font-size:clamp(34px,4.6vw,54px);line-height:1.08;margin:20px 0 20px;}
+.hero h1 .hl{color:var(--blue-glow);}
+.hero-sub{color:var(--ink-1);font-size:19px;max-width:520px;margin-bottom:32px;}
+.hero-cta-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:18px;}
+.trust-line{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-2);display:flex;gap:18px;flex-wrap:wrap;margin-top:22px;}
+.trust-line span{display:flex;align-items:center;gap:6px;}
+.trust-line span::before{content:'✓';color:var(--green);font-weight:700;}
+
+/* radar sweep signature element */
+.radar-visual{
+  position:relative;
+  width:100%;aspect-ratio:1/1;max-width:440px;margin:0 auto;
+}
+.radar-ring{
+  position:absolute;border-radius:50%;
+  border:1px solid var(--line);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+}
+.radar-ring:nth-child(1){width:100%;height:100%;}
+.radar-ring:nth-child(2){width:74%;height:74%;}
+.radar-ring:nth-child(3){width:48%;height:48%;}
+.radar-ring:nth-child(4){width:22%;height:22%;}
+.radar-cross{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:100%;height:1px;background:var(--line);
+}
+.radar-cross.v{width:1px;height:100%;}
+.radar-sweep{
+  position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg, rgba(63,123,250,0) 0deg, rgba(63,123,250,0) 300deg, rgba(95,227,214,.45) 350deg, rgba(95,227,214,.85) 360deg);
+  animation:spin 4.5s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.radar-blip{
+  position:absolute;width:11px;height:11px;border-radius:50%;
+  transform:translate(-50%,-50%);
+}
+.radar-blip::after{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  background:inherit;opacity:.35;filter:blur(3px);
+  animation:blip-pulse 2.2s ease-in-out infinite;
+}
+@keyframes blip-pulse{0%,100%{transform:scale(1);opacity:.35}50%{transform:scale(1.8);opacity:0}}
+.radar-blip.red{background:var(--red);top:28%;left:64%;animation-delay:.1s;}
+.radar-blip.amber{background:var(--amber);top:62%;left:30%;}
+.radar-blip.green{background:var(--green);top:70%;left:68%;}
+.radar-blip.blue{background:var(--blue-glow);top:38%;left:22%;}
+.radar-label{
+  position:absolute;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-2);
+  background:var(--bg-0);padding:2px 6px;border-radius:4px;border:1px solid var(--line);
+  white-space:nowrap;
+}
+
+.hero-video-card{
+  margin-top:52px;
+  border-radius:var(--radius-card);
+  border:1px solid var(--line);
+  background:var(--bg-card);
+  padding:10px;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+}
+.hero-video-card video{border-radius:12px;width:100%;}
+
+/* ---------- PAIN CHECKLIST ---------- */
+.pain-list{display:flex;flex-direction:column;gap:2px;margin-top:8px;}
+.pain-item{
+  display:flex;gap:16px;align-items:flex-start;
+  padding:20px 4px;border-bottom:1px solid var(--line);
+}
+.pain-item .mark{
+  font-family:var(--font-mono);color:var(--red);font-size:15px;flex-shrink:0;margin-top:2px;
+}
+.pain-item p{font-size:17px;color:var(--ink-0);}
+.pain-close{
+  margin-top:36px;padding:20px 24px;border-radius:var(--radius-card);
+  background:linear-gradient(135deg,rgba(62,123,250,.14),rgba(95,227,214,.08));
+  border:1px solid var(--line);font-family:var(--font-display);font-weight:600;font-size:17px;
+}
+
+/* ---------- AGITATION / VIRADA ---------- */
+.agit p{font-size:18px;color:var(--ink-1);max-width:640px;margin-bottom:16px;}
+.agit strong{color:var(--ink-0);}
+.virada-card{
+  margin-top:20px;
+  border-left:3px solid var(--cyan);
+  padding:28px 32px;
+  background:var(--bg-card);
+  border-radius:0 var(--radius-card) var(--radius-card) 0;
+  font-size:18px;
+  color:var(--ink-0);
+}
+
+/* ---------- STEPS ---------- */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.step-card{
+  background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius-card);
+  padding:26px 22px;position:relative;
+}
+.step-num{font-family:var(--font-mono);color:var(--blue-glow);font-size:13px;margin-bottom:14px;}
+.step-card h3{font-size:17px;margin-bottom:8px;}
+.step-card p{font-size:14.5px;color:var(--ink-1);}
+
+/* ---------- DEMO SECTIONS ---------- */
+.demo-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;
+  padding:56px 0;border-bottom:1px solid var(--line);
+}
+.demo-row:last-child{border-bottom:none;}
+.demo-row.rev .demo-media{order:2;}
+.demo-media{
+  border-radius:var(--radius-card);overflow:hidden;border:1px solid var(--line);
+  background:var(--bg-0);box-shadow:0 24px 48px -18px rgba(0,0,0,.55);
+}
+.demo-text .eyebrow{margin-bottom:14px;}
+.demo-text h3{font-size:26px;margin-bottom:12px;}
+.demo-text p{color:var(--ink-1);font-size:16px;}
+
+/* ---------- FEATURES ---------- */
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.feat-card{
+  background:var(--bg-card);border:1px solid var(--line);border-radius:14px;padding:22px 18px;
+}
+.feat-icon{font-size:22px;margin-bottom:12px;}
+.feat-card h4{font-family:var(--font-display);font-size:15.5px;margin-bottom:6px;color:var(--ink-0);}
+.feat-card p{font-size:13.5px;color:var(--ink-2);}
+
+/* ---------- FIT / NOT FIT ---------- */
+.fit-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.fit-card{border-radius:var(--radius-card);padding:32px;border:1px solid var(--line);}
+.fit-card.yes{background:rgba(61,220,132,.06);border-color:rgba(61,220,132,.25);}
+.fit-card.no{background:rgba(255,92,108,.05);border-color:rgba(255,92,108,.2);}
+.fit-card h3{margin-bottom:18px;}
+.fit-card ul{list-style:none;display:flex;flex-direction:column;gap:14px;}
+.fit-card li{display:flex;gap:10px;font-size:15.5px;color:var(--ink-1);}
+.fit-card.yes li::before{content:'✓';color:var(--green);font-weight:700;}
+.fit-card.no li::before{content:'✕';color:var(--red);font-weight:700;}
+
+/* ---------- AUTHOR ---------- */
+.author-card{
+  display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center;
+  background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius-card);
+  padding:36px;
+}
+.author-avatar{
+  width:104px;height:104px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:800;font-size:32px;color:var(--bg-0);
+}
+.author-card h3{font-size:20px;margin-bottom:4px;}
+.author-card .role{font-family:var(--font-mono);color:var(--cyan);font-size:13px;margin-bottom:12px;}
+.author-card p{color:var(--ink-1);font-size:15.5px;}
+
+/* ---------- PRICE ---------- */
+.price-section{position:relative;}
+.anchor-box{
+  max-width:680px;margin:0 auto 40px;background:var(--bg-card);border:1px solid var(--line);
+  border-radius:var(--radius-card);padding:28px 32px;
+}
+.anchor-box .eyebrow{margin-bottom:14px;}
+.anchor-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--line);font-size:15px;color:var(--ink-1);}
+.anchor-row.total{border-bottom:none;padding-top:16px;font-family:var(--font-display);font-weight:700;color:var(--ink-0);font-size:16px;}
+.price-card{
+  max-width:520px;margin:0 auto;text-align:center;
+  background:linear-gradient(180deg,var(--bg-card),var(--bg-2));
+  border:1px solid var(--line);border-radius:24px;padding:44px 36px;
+  box-shadow:0 30px 70px -20px rgba(62,123,250,.18);
+}
+.price-tag{font-family:var(--font-mono);font-size:13px;color:var(--amber);background:rgba(255,177,68,.1);border:1px solid rgba(255,177,68,.3);padding:6px 14px;border-radius:var(--radius-pill);display:inline-block;margin-bottom:18px;}
+.price-big{font-family:var(--font-display);font-weight:800;font-size:52px;color:var(--ink-0);margin-bottom:2px;}
+.price-parcel{color:var(--ink-1);font-size:15px;margin-bottom:22px;}
+.price-parcel .note{display:block;font-size:11.5px;color:var(--ink-2);font-family:var(--font-mono);margin-top:4px;}
+.price-card .btn{width:100%;font-size:16.5px;padding:16px;margin-bottom:16px;}
+.guarantee{display:flex;align-items:center;gap:10px;justify-content:center;font-size:13.5px;color:var(--ink-1);font-family:var(--font-mono);}
+
+/* ---------- CONFRONT ---------- */
+.confront{text-align:center;max-width:720px;margin:0 auto;}
+.confront h2{font-size:clamp(26px,3.6vw,36px);}
+.confront p{color:var(--ink-1);font-size:17px;margin-top:18px;}
+.confront .btn{margin-top:32px;}
+
+/* ---------- FAQ ---------- */
+.faq-item{border-bottom:1px solid var(--line);}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:22px 4px;cursor:pointer;font-family:var(--font-display);font-weight:600;font-size:16.5px;
+}
+.faq-q .plus{font-family:var(--font-mono);color:var(--blue-glow);font-size:20px;transition:transform .2s ease;}
+.faq-item.open .plus{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+.faq-a p{padding:0 4px 22px;color:var(--ink-1);font-size:15.5px;max-width:640px;}
+
+/* ---------- FOOTER ---------- */
+footer{padding:56px 0 40px;border-top:1px solid var(--line);background:var(--bg-1);}
+.footer-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
+.footer-contact{font-family:var(--font-mono);font-size:13px;color:var(--ink-2);display:flex;gap:22px;flex-wrap:wrap;}
+.footer-copy{font-size:12.5px;color:var(--ink-2);margin-top:24px;}
+
+/* ---------- STICKY MOBILE CTA ---------- */
+.sticky-cta{
+  position:fixed;bottom:0;left:0;right:0;z-index:60;
+  background:rgba(8,11,16,.92);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);
+  padding:12px 16px;display:none;
+  align-items:center;justify-content:space-between;gap:12px;
+}
+.sticky-cta .btn{flex:1;text-align:center;}
+
+@media(max-width:920px){
+  .hero-grid{grid-template-columns:1fr;}
+  .radar-visual{max-width:280px;order:-1;}
+  .steps{grid-template-columns:1fr 1fr;}
+  .demo-row{grid-template-columns:1fr;gap:28px;}
+  .demo-row.rev .demo-media{order:0;}
+  .feat-grid{grid-template-columns:1fr 1fr;}
+  .fit-grid{grid-template-columns:1fr;}
+  .author-card{grid-template-columns:1fr;text-align:center;}
+  .author-card .author-avatar{margin:0 auto;}
+  .sticky-cta{display:flex;}
+  .section{padding:64px 0;}
+  body{padding-bottom:76px;}
+}
+@media(max-width:560px){
+  .steps{grid-template-columns:1fr;}
+  .feat-grid{grid-template-columns:1fr;}
+  .anchor-box,.price-card{padding:24px 20px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo"><span class="dot"></span>RADAR</div>
+    <a href="#preco" class="btn btn-primary btn-sm">Quero automatizar</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="blueprint-grid"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Rastreio automático de demandas, atividades e responsáveis</span>
+      <h1>Pare de perguntar <span class="hl">"como tá aquele projeto?"</span> — a planilha te avisa sozinha.</h1>
+      <p class="hero-sub">Controle de prazos e responsáveis, direto no Google Sheets que seu time já usa. Configura uma vez, roda sozinho — sem sistema novo, sem treinar ninguém.</p>
+      <div class="hero-cta-row">
+        <a href="#preco" class="btn btn-primary">Quero organizar minhas tarefas</a>
+        <a href="#como-funciona" class="btn btn-ghost">Ver como funciona</a>
+      </div>
+      <div class="trust-line">
+        <span>Pagamento único — R$67</span>
+        <span>Acesso vitalício</span>
+        <span>Garantia de 7 dias</span>
+        <span>100% dentro da sua conta Google</span>
+      </div>
+    </div>
+    <div class="radar-visual">
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-cross"></div>
+      <div class="radar-cross v"></div>
+      <div class="radar-sweep"></div>
+      <div class="radar-blip red"></div>
+      <div class="radar-blip amber"></div>
+      <div class="radar-blip green"></div>
+      <div class="radar-blip blue"></div>
+      <div class="radar-label" style="top:24%;left:70%;">atrasado</div>
+      <div class="radar-label" style="top:76%;left:28%;">no prazo</div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="hero-video-card">
+      <video controls preload="metadata" poster="assets/demo-dashboard.gif">
+        <source src="assets/demo-video.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+<!-- DOR -->
+<section class="section bg-1" id="dor">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Diagnóstico</span>
+      <h2>Reconhece alguma dessas?</h2>
+    </div>
+    <div class="pain-list">
+      <div class="pain-item"><span class="mark">//</span><p>Você só sabe que um projeto atrasou porque o cliente perguntou.</p></div>
+      <div class="pain-item"><span class="mark">//</span><p>Alguém saiu de férias e ninguém mais sabe em que pé as tarefas dele estavam.</p></div>
+      <div class="pain-item"><span class="mark">//</span><p>Você cobra prazo pelo WhatsApp — e esquece de cobrar metade.</p></div>
+      <div class="pain-item"><span class="mark">//</span><p>Sua "gestão de tarefas" hoje é uma aba de planilha que ninguém atualiza.</p></div>
+      <div class="pain-item"><span class="mark">//</span><p>Toda segunda você perde 20 minutos perguntando "como tá isso, como tá aquilo".</p></div>
+    </div>
+    <div class="pain-close">Se você se identificou com pelo menos 2 dessas, o resto desta página é pra você.</div>
+  </div>
+</section>
+
+<!-- AGITAÇÃO + VIRADA -->
+<section class="section" id="virada">
+  <div class="wrap agit">
+    <span class="eyebrow">O que tá acontecendo de verdade</span>
+    <h2 style="margin-top:14px;">É horrível gerenciar no escuro, né?</h2>
+    <p>Você não abriu um escritório pra virar central de cobrança. Mas é isso que a rotina vira quando o controle de prazo mora na sua cabeça e no grupo do WhatsApp.</p>
+    <p>Cada "como tá aquilo?" que você precisa perguntar é <strong>tempo que devia estar em projeto, não em gestão manual.</strong> E enquanto isso, o prazo que ninguém sinalizou continua correndo.</p>
+    <div class="virada-card">
+      Toda manhã, cada responsável recebe só <strong>as tarefas dele</strong> — por email, com link direto pro WhatsApp do cliente. Você abre um dashboard e vê status de tudo em <strong>30 segundos</strong>. Ninguém precisa ser cobrado, porque a planilha já cobrou sozinha.
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="section bg-1" id="como-funciona">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Processo — 4 etapas, nessa ordem</span>
+      <h2>Como funciona</h2>
+      <p>Não tem curva de aprendizado nova: você continua preenchendo planilha. O resto roda sozinho.</p>
+    </div>
+    <div class="steps">
+      <div class="step-card"><div class="step-num">01</div><h3>Você preenche a tarefa</h3><p>Cliente, prazo, responsável. Só isso — nada de campo extra pra decorar.</p></div>
+      <div class="step-card"><div class="step-num">02</div><h3>A planilha calcula sozinha</h3><p>Atrasado, entrega hoje, em breve, no prazo. Cor automática, sem fórmula pra você mexer.</p></div>
+      <div class="step-card"><div class="step-num">03</div><h3>Cada um recebe o que é dele</h3><p>Email individual por pessoa, ou Telegram se seu time preferir grupo.</p></div>
+      <div class="step-card"><div class="step-num">04</div><h3>Você olha o dashboard</h3><p>Status de tudo em 30 segundos — sem perguntar, sem esperar resposta de ninguém.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMOS -->
+<section class="section" id="demo">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Na tela, não no papel</span>
+      <h2>Veja rodando de verdade</h2>
+      <p>Sem mockup, sem ilustração genérica. É a planilha real, com dado real.</p>
+    </div>
+
+    <div class="demo-row">
+      <div class="demo-media"><img src="assets/demo-tarefas.gif" alt="Tabela de TAREFAS do RADAR com status colorido automático"></div>
+      <div class="demo-text">
+        <span class="eyebrow">Tabela de tarefas</span>
+        <h3>Preenche cliente, prazo e responsável — a cor cuida do resto</h3>
+        <p>Atrasado, entrega hoje, em breve ou no prazo: a coluna STATUS PRAZO calcula e pinta sozinha a cada edição. Você não configura nada pra isso acontecer.</p>
+      </div>
+    </div>
+
+    <div class="demo-row rev">
+      <div class="demo-media"><img src="assets/demo-dashboard.gif" alt="Dashboard do RADAR com carga por engenheiro e por projeto"></div>
+      <div class="demo-text">
+        <span class="eyebrow">Dashboard</span>
+        <h3>Status de todo o escritório em uma tela</h3>
+        <p>Carga por responsável, por projeto/prazo e por projeto/status — as 3 visões que você hoje monta perguntando pra cada pessoa, aqui já vêm prontas e ordenadas.</p>
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <div class="demo-media"><img src="assets/demo-email.gif" alt="Email automático individual enviado pelo RADAR"></div>
+      <div class="demo-text">
+        <span class="eyebrow">Email individual</span>
+        <h3>Cada pessoa recebe só as tarefas dela</h3>
+        <p>Nada de lista gigante com o time inteiro. O responsável abre o email e já vê, ordenado por urgência, exatamente o que precisa resolver — com link direto de WhatsApp pro cliente.</p>
+      </div>
+    </div>
+
+    <div class="demo-row rev">
+      <div class="demo-media"><img src="assets/demo-telegram.gif" alt="Notificação do RADAR via bot do Telegram"></div>
+      <div class="demo-text">
+        <span class="eyebrow">Telegram (opcional)</span>
+        <h3>Pra quem prefere grupo a caixa de entrada</h3>
+        <p>O mesmo resumo do email, agrupado por severidade, direto no Telegram — atrasados primeiro, sem precisar abrir a planilha.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section bg-1" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">O que vem incluso</span>
+      <h2>Tudo dentro de uma única planilha</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-icon">📊</div><h4>Dashboard automático</h4><p>3 visões: por responsável, por prazo, por status.</p></div>
+      <div class="feat-card"><div class="feat-icon">📧</div><h4>Email individual</h4><p>Cada pessoa recebe só as tarefas dela.</p></div>
+      <div class="feat-card"><div class="feat-icon">📱</div><h4>Link direto de WhatsApp</h4><p>Sai clicando pro cliente/responsável, mensagem pronta.</p></div>
+      <div class="feat-card"><div class="feat-icon">✈️</div><h4>Telegram opcional</h4><p>Pra quem prefere grupo a email.</p></div>
+      <div class="feat-card"><div class="feat-icon">🎨</div><h4>Cores automáticas</h4><p>Atrasado, hoje, em breve — sem configurar nada.</p></div>
+      <div class="feat-card"><div class="feat-icon">⚙️</div><h4>Cresce com você</h4><p>Uso solo ou equipe, no mesmo arquivo.</p></div>
+      <div class="feat-card"><div class="feat-icon">🛟</div><h4>Backup automático</h4><p>Exportação periódica em CSV por email, sem configurar servidor.</p></div>
+      <div class="feat-card"><div class="feat-icon">🔒</div><h4>100% na sua conta Google</h4><p>Nada sai pra servidor externo — os dados são seus, sempre.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FIT -->
+<section class="section" id="pra-quem">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Antes de continuar</span>
+      <h2>Pra quem é — e pra quem não é</h2>
+    </div>
+    <div class="fit-grid">
+      <div class="fit-card yes">
+        <h3>É pra você se</h3>
+        <ul>
+          <li>Você já usa (ou tá disposto a usar) Google Sheets</li>
+          <li>Gerencia mais de um projeto/cliente ao mesmo tempo</li>
+          <li>Cansou de cobrar prazo manualmente</li>
+        </ul>
+      </div>
+      <div class="fit-card no">
+        <h3>Não é pra você se</h3>
+        <ul>
+          <li>Já usa um sistema completo (Monday, ClickUp) e tá satisfeito</li>
+          <li>Precisa de app mobile nativo — o RADAR é web, via navegador ou app do Sheets</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTORIDADE -->
+<section class="section bg-1" id="autor">
+  <div class="wrap">
+    <div class="author-card">
+      <div class="author-avatar">GS</div>
+      <div>
+        <h3>Gustavo Simonato</h3>
+        <div class="role">Engenheiro que Automatiza — @gssimonato</div>
+        <p>Engenheiro estrutural/civil há 16 anos, sempre dentro do mesmo tipo de rotina que você vive: prazo, cliente e planilha. O RADAR nasceu de um script pessoal pra parar de perguntar "como tá aquilo" no próprio escritório — antes de virar produto.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREÇO -->
+<section class="section price-section" id="preco">
+  <div class="blueprint-grid"></div>
+  <div class="wrap">
+    <div class="section-head" style="text-align:center;margin:0 auto 40px;">
+      <span class="eyebrow" style="justify-content:center;">Investimento</span>
+      <h2>O que custa continuar perguntando "como tá aquilo?"</h2>
+    </div>
+
+    <div class="anchor-box">
+      <span class="eyebrow">Conta rápida</span>
+      <div class="anchor-row"><span>20 min/semana perguntando status manualmente</span><span>≈ 1,3h/mês</span></div>
+      <div class="anchor-row"><span>Custo da sua hora (estimativa conservadora)</span><span>R$ 150/h</span></div>
+      <div class="anchor-row total"><span>Custo anual só desse retrabalho</span><span>≈ R$ 2.340/ano</span></div>
+      <p style="margin-top:14px;font-size:13.5px;color:var(--ink-2);">Isso sem contar o prazo que passou batido porque ninguém sinalizou. O RADAR custa uma fração disso — uma vez.</p>
+    </div>
+
+    <div class="price-card">
+      <span class="price-tag">Preço de lançamento — sobe conforme o produto evolui</span>
+      <div class="price-big">R$ 67</div>
+      <div class="price-parcel">à vista, pagamento único
+        <span class="note">ou em até 9x de R$ 8,54* — *valor de referência, sujeito a taxas do Hotmart</span>
+      </div>
+      <a href="#" class="btn btn-primary" id="cta-checkout">Quero organizar minhas tarefas</a>
+      <div class="guarantee">🛟 Garantia incondicional de 7 dias — devolução total, sem burocracia</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONFRONTO -->
+<section class="section bg-2">
+  <div class="wrap confront">
+    <h2>Até quando o controle de prazo vai morar na sua cabeça?</h2>
+    <p>Você pode continuar cobrando por WhatsApp, torcendo pra não esquecer ninguém — ou deixar a planilha fazer isso sozinha, todo dia, sem exceção.</p>
+    <a href="#preco" class="btn btn-primary">Quero organizar minhas tarefas</a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Perguntas frequentes</span>
+      <h2>Antes de decidir</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">Preciso saber programar?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Não. Você preenche a planilha normalmente — toda a automação já vem pronta.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Meus dados ficam seguros?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Sim — o script roda inteiramente dentro da sua própria conta Google. Nada é enviado pra nenhum servidor externo, nem pra gente.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Funciona só pra engenharia?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Não — funciona pra qualquer tipo de projeto: clientes, obras, consultorias, o que for.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Funciona no celular?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Funciona pelo app do Google Sheets, mas a experiência é melhor no computador — é uma planilha, não um app dedicado.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Qual a forma de pagamento?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Pix ou cartão de crédito (parcelado), processado pela Hotmart — uma das maiores plataformas de venda de produtos digitais do Brasil.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">E se eu não gostar?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Você tem 7 dias de garantia incondicional. Devolução total, sem precisar justificar.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Como recebo o suporte se travar em algo?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Direto por email (gsimonato.gss@gmail.com) ou WhatsApp — sem central de atendimento genérica.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-row">
+      <div class="logo"><span class="dot"></span>RADAR</div>
+      <div class="footer-contact">
+        <span>gsimonato.gss@gmail.com</span>
+        <span>+55 51 99934-5376</span>
+        <span>@gssimonato</span>
+      </div>
+    </div>
+    <div class="footer-copy">RADAR — Gustavo Simonato · Engenheiro que Automatiza. Pagamento processado via Hotmart.</div>
+  </div>
+</footer>
+
+<div class="sticky-cta">
+  <a href="#preco" class="btn btn-primary">Quero organizar minhas tarefas — R$67</a>
+</div>
+
+<script>
+document.querySelectorAll('.faq-item').forEach(item=>{
+  const q=item.querySelector('.faq-q');
+  const a=item.querySelector('.faq-a');
+  q.addEventListener('click',()=>{
+    const isOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(o=>{o.classList.remove('open');o.querySelector('.faq-a').style.maxHeight=null;});
+    if(!isOpen){item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';}
+  });
+});
+</script>
+</body>
+</html>
