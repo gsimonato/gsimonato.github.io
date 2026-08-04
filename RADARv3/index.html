@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RADAR — Pare de perguntar "como tá aquele projeto?"</title>
+<meta name="description" content="Controle de prazos, responsáveis e status de todo o escritório, direto no Google Sheets que seu time já usa.">
+<!-- ALT: favicon — pendente, ver relatorio_imagens_RADAR.md -->
+<link rel="icon" href="assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@500;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#05070a;
+    --bg-1:#0d1420;
+    --bg-2:#121b2b;
+    --ink:#e7ecf3;
+    --ink-dim:#94a3b8;
+    --ink-faint:#5b6b82;
+    --blue:#2e6bff;
+    --blue-bright:#5b8bff;
+    --red:#ff4444;
+    --amber:#ffb020;
+    --green:#22c55e;
+    --border:#1c2738;
+    --radius-pill:999px;
+    --font-display:'Sora',sans-serif;
+    --font-body:'Onest',sans-serif;
+    --font-mono:'JetBrains Mono',monospace;
+    --font-btn:'Montserrat',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg-0);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.6;
+    font-size:17px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px;}
+  section{padding:72px 0;}
+  section.alt{background:var(--bg-1);}
+  h1,h2,h3{font-family:var(--font-display);font-weight:800;letter-spacing:-0.01em;color:#fff;}
+  h1{font-size:clamp(32px,5vw,52px);line-height:1.12;}
+  h2{font-size:clamp(24px,3.4vw,34px);line-height:1.2;margin-bottom:28px;}
+  h3{font-size:20px;margin-bottom:8px;color:var(--ink);}
+  p{color:var(--ink-dim);}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:13px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--blue-bright);
+    display:block;
+    margin-bottom:14px;
+  }
+  .lede{font-size:19px;color:var(--ink-dim);max-width:640px;}
+  .btn{
+    display:inline-block;
+    font-family:var(--font-btn);
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:0.01em;
+    text-decoration:none;
+    padding:18px 34px;
+    border-radius:var(--radius-pill);
+    background:var(--blue);
+    color:#fff;
+    text-align:center;
+    box-shadow:0 8px 24px -8px rgba(46,107,255,0.55);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(46,107,255,0.7);}
+  .btn-row{margin-top:32px;}
+  .hero{
+    padding-top:100px;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(46,107,255,0.18), transparent 55%),
+      var(--bg-0);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-badges{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:28px;}
+  .hero-badge{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-dim);}
+  .logo-slot{
+    /* ALT: logo RADAR — ícone de radar/pin + wordmark, paleta azul do produto */
+    display:inline-flex;align-items:center;gap:10px;margin-bottom:44px;
+    font-family:var(--font-mono);font-size:13px;color:var(--ink-faint);
+    border:1px dashed var(--border);border-radius:8px;padding:8px 14px;
+  }
+  .media-frame{
+    margin-top:48px;border-radius:16px;overflow:hidden;border:1px solid var(--border);
+    box-shadow:0 40px 80px -40px rgba(0,0,0,0.7);
+  }
+  .media-frame img{display:block;width:100%;height:auto;}
+  .media-caption{font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+
+  /* Status legend — elemento assinatura, cores reais do produto */
+  .legend{display:flex;flex-wrap:wrap;gap:18px;margin:36px 0 8px;}
+  .legend-item{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:13px;color:var(--ink-dim);}
+  .dot{width:10px;height:10px;border-radius:50%;flex:none;}
+  .dot-red{background:var(--red);box-shadow:0 0 12px rgba(255,68,68,.6);}
+  .dot-amber{background:var(--amber);box-shadow:0 0 12px rgba(255,176,32,.6);}
+  .dot-green{background:var(--green);box-shadow:0 0 12px rgba(34,197,94,.6);}
+  .dot-blue{background:var(--blue-bright);box-shadow:0 0 12px rgba(91,139,255,.6);}
+
+  .pain-list{list-style:none;margin-top:32px;display:grid;gap:16px;}
+  .pain-list li{
+    display:flex;gap:14px;align-items:flex-start;
+    background:var(--bg-2);border:1px solid var(--border);
+    border-radius:12px;padding:18px 20px;font-size:16px;color:var(--ink);
+  }
+  .pain-list li .dot{margin-top:7px;}
+  .callout{
+    margin-top:36px;text-align:center;font-family:var(--font-display);font-weight:700;
+    font-size:19px;color:#fff;
+  }
+  .callout span{color:var(--blue-bright);}
+
+  .empathy p{font-size:18px;color:var(--ink);max-width:680px;}
+  .empathy strong{color:#fff;}
+
+  .steps{display:grid;gap:28px;margin-top:20px;}
+  .step{
+    display:grid;grid-template-columns:56px 1fr;gap:20px;
+    border-top:1px solid var(--border);padding-top:28px;
+  }
+  .step:first-child{border-top:none;padding-top:0;}
+  .step-num{
+    font-family:var(--font-mono);font-weight:700;font-size:15px;color:var(--blue-bright);
+    width:44px;height:44px;border:1px solid var(--border);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .step-media{margin-top:18px;border-radius:12px;overflow:hidden;border:1px solid var(--border);max-width:560px;}
+  .step-media img{display:block;width:100%;}
+
+  .benefits{list-style:none;display:grid;gap:14px;margin-top:24px;}
+  .benefits li{display:flex;gap:12px;font-size:16px;color:var(--ink);}
+  .benefits li::before{content:"✓";color:var(--green);font-weight:700;flex:none;}
+
+  .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:28px;}
+  .feature-card{
+    background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:22px;
+  }
+  .feature-card .ico{font-size:22px;margin-bottom:10px;display:block;}
+  .feature-card p{font-size:14.5px;color:var(--ink-dim);}
+  .feature-extra{margin-top:36px;display:grid;gap:16px;}
+  .feature-extra .item{border-left:3px solid var(--blue);padding-left:18px;}
+
+  .price-card{
+    margin-top:8px;background:linear-gradient(180deg, var(--bg-2), var(--bg-1));
+    border:1px solid var(--border);border-radius:20px;padding:48px 40px;text-align:center;
+  }
+  .price-tag{font-family:var(--font-mono);font-size:15px;color:var(--blue-bright);letter-spacing:0.05em;text-transform:uppercase;}
+  .price{font-family:var(--font-display);font-weight:800;font-size:56px;color:#fff;margin:14px 0 4px;}
+  .price small{font-family:var(--font-body);font-size:16px;color:var(--ink-dim);font-weight:400;}
+  .price-sub{color:var(--ink-dim);font-size:15px;}
+  .guarantee{
+    margin-top:28px;display:inline-flex;align-items:center;gap:10px;
+    border:1px solid var(--border);border-radius:var(--radius-pill);
+    padding:12px 22px;font-size:14px;color:var(--ink);
+  }
+  .guarantee .ico{color:var(--green);}
+  .recap{list-style:none;display:grid;gap:12px;margin-bottom:36px;max-width:520px;margin-left:auto;margin-right:auto;text-align:left;}
+  .recap li{display:flex;gap:10px;font-size:15px;color:var(--ink-dim);}
+  .recap li::before{content:"✓";color:var(--green);font-weight:700;}
+
+  .post-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:28px;}
+  .post-step{background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:24px;}
+  .post-step .n{font-family:var(--font-mono);color:var(--blue-bright);font-size:14px;}
+
+  .fit-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px;}
+  .fit-col ul{list-style:none;display:grid;gap:12px;}
+  .fit-col li{font-size:15px;color:var(--ink-dim);padding-left:24px;position:relative;}
+  .fit-yes li::before{content:"✓";position:absolute;left:0;color:var(--green);}
+  .fit-no li::before{content:"✕";position:absolute;left:0;color:var(--red);}
+
+  .author{display:grid;grid-template-columns:120px 1fr;gap:28px;align-items:flex-start;margin-top:8px;}
+  .author-photo{
+    /* ALT: foto profissional/casual de Gustavo, contexto de escritório de engenharia */
+    width:120px;height:120px;border-radius:50%;border:1px dashed var(--border);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);text-align:center;padding:10px;
+  }
+  .author h3{color:#fff;}
+  .author .handle{font-family:var(--font-mono);color:var(--blue-bright);font-size:14px;}
+
+  .final-cta{text-align:center;}
+  .final-cta p{max-width:600px;margin:0 auto 12px;font-size:16px;}
+
+  .faq{display:grid;gap:0;margin-top:28px;}
+  .faq-item{border-top:1px solid var(--border);padding:22px 0;}
+  .faq-item:first-child{border-top:none;}
+  .faq-item h3{font-size:16.5px;color:#fff;margin-bottom:6px;}
+  .faq-item p{font-size:15px;}
+
+  footer{padding:48px 0;text-align:center;}
+  footer p{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-faint);}
+
+  @media (max-width:640px){
+    section{padding:52px 0;}
+    .author{grid-template-columns:1fr;justify-items:center;text-align:center;}
+    .fit-grid{grid-template-columns:1fr;}
+    .post-steps{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="logo-slot"><!-- ALT: logo RADAR --> ◎ RADAR</div>
+    <span class="eyebrow">Google Sheets + automação — não é mais um app pra instalar</span>
+    <h1>Pare de perguntar "como tá aquele projeto?" — a planilha te avisa sozinha.</h1>
+    <p class="lede">Controle de prazos, responsáveis e status de todo o escritório, direto no Google Sheets que seu time já usa. Sem curso, sem app novo, sem treinar ninguém.</p>
+
+    <div class="hero-badges">
+      <div class="hero-badge"><span class="dot dot-blue"></span> Status de tudo em 30 segundos</div>
+      <div class="hero-badge"><span class="dot dot-red"></span> Zero cobrança manual no WhatsApp</div>
+      <div class="hero-badge"><span class="dot dot-green"></span> Controle mesmo com equipe de férias</div>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn" href="#preco">Quero parar de cobrar prazo no WhatsApp →</a>
+    </div>
+
+    <div class="media-frame">
+      <img src="demo-dashboard.gif" alt="Dashboard do RADAR em uso — 3 seções: carga por engenheiro, por projeto/prazo, por projeto/status">
+    </div>
+    <p class="media-caption">DEMO REAL — sem edição, sem dado fictício</p>
+  </div>
+</section>
+
+<!-- ============ DOR ============ -->
+<section class="alt" id="dor">
+  <div class="wrap">
+    <span class="eyebrow">Reconhece alguma dessas?</span>
+    <h2>Isso aqui é pra você, engenheiro, que…</h2>
+    <ul class="pain-list">
+      <li><span class="dot dot-red"></span> Só sabe que um projeto atrasou porque <strong>o cliente perguntou primeiro</strong></li>
+      <li><span class="dot dot-red"></span> Já teve alguém sair de férias e <strong>ninguém mais soube em que pé as tarefas dele estavam</strong></li>
+      <li><span class="dot dot-amber"></span> Cobra prazo pelo WhatsApp — <strong>e esquece de cobrar metade</strong></li>
+      <li><span class="dot dot-amber"></span> Tem uma aba de "gestão de tarefas" que <strong>ninguém atualiza de verdade</strong></li>
+      <li><span class="dot dot-amber"></span> Toda segunda-feira perde 20 minutos perguntando <strong>"como tá isso, como tá aquilo"</strong></li>
+      <li><span class="dot dot-blue"></span> Quer um sistema, mas <strong>não quer pagar mensalidade nem treinar a equipe</strong> numa ferramenta nova</li>
+    </ul>
+    <p class="callout">Se você se identificou com <span>2 ou mais</span>, o RADAR foi feito pra você.</p>
+  </div>
+</section>
+
+<!-- ============ EMPATIA / VILÃO ============ -->
+<section class="empathy">
+  <div class="wrap">
+    <span class="eyebrow">Direto do escritório</span>
+    <p><strong>Eu sei como é.</strong> 16 anos de escritório de engenharia — boa parte cobrando prazo por mensagem, perguntando "e aí, como tá?" em grupo de WhatsApp que ninguém lê.</p>
+    <br>
+    <p>O problema nunca foi falta de esforço. Foi <strong>falta de um sistema que cobra sozinho</strong>.</p>
+    <br>
+    <p>Enquanto o controle de prazo depender de alguém lembrar de avisar, <strong>o cliente vai continuar descobrindo o atraso antes de você</strong> — e isso corrói confiança mais rápido que qualquer erro técnico.</p>
+  </div>
+</section>
+
+<!-- ============ COMO FUNCIONA ============ -->
+<section class="alt" id="como-funciona">
+  <div class="wrap">
+    <span class="eyebrow">Como o RADAR resolve isso</span>
+    <h2>4 passos — nenhum deles é "aprender uma ferramenta nova"</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <h3>Você preenche a tarefa</h3>
+          <p>Cliente/projeto, prazo, responsável. Só isso. Nada de aba nova, nada de treinamento — é a planilha que seu time já sabe usar.</p>
+          <div class="step-media"><img src="demo-cadastro.gif" alt="Preenchendo uma tarefa nova no RADAR — dropdowns de status, engenheiro e cliente"></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <h3>A planilha calcula sozinha</h3>
+          <p>Atrasado, entrega hoje, em breve, no prazo — cor automática, sem fórmula pra você mexer.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <h3>Cada pessoa recebe só o que é dela</h3>
+          <p>Email individual de manhã (ou Telegram, se preferir) — com link direto de WhatsApp pro cliente/responsável já pronto pra clicar.</p>
+          <div class="step-media"><img src="demo-email.gif" alt="Email automático do RADAR chegando — cards ordenados por urgência, link de WhatsApp"></div>
+          <div class="step-media"><img src="demo-telegram.gif" alt="Notificação do RADAR no Telegram — grupo agrupado por status de prazo"></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <h3>Você abre o dashboard e sabe tudo</h3>
+          <p>3 visões — por responsável, por projeto/prazo, por projeto/status. Sem perguntar, sem esperar resposta, sem reunião de status.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BENEFÍCIOS ============ -->
+<section>
+  <div class="wrap">
+    <h2>Fazendo esses 4 passos, você passa a…</h2>
+    <ul class="benefits">
+      <li>Ter status de todo o escritório sem perguntar pra ninguém</li>
+      <li>Nunca mais descobrir um atraso pelo cliente</li>
+      <li>Parar de cobrar prazo manualmente, um WhatsApp por vez</li>
+      <li>Manter controle mesmo quando alguém sai de férias ou muda de time</li>
+      <li>Escalar de uso solo pra equipe sem trocar de ferramenta</li>
+      <li>Ter tudo dentro da sua própria conta Google — nenhum dado sai pra servidor externo</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="alt" id="incluso">
+  <div class="wrap">
+    <span class="eyebrow">O que vem incluso</span>
+    <h2>Tudo dentro de uma planilha só</h2>
+    <div class="feature-grid">
+      <div class="feature-card"><span class="ico">📊</span><h3>Dashboard automático</h3><p>3 visões: por responsável, por projeto/prazo, por projeto/status.</p></div>
+      <div class="feature-card"><span class="ico">📧</span><h3>Email individual</h3><p>Cada pessoa recebe só as tarefas dela — não uma lista gigante de todo mundo.</p></div>
+      <div class="feature-card"><span class="ico">📱</span><h3>Link direto de WhatsApp</h3><p>Sai clicando pro cliente/responsável, mensagem já pronta.</p></div>
+      <div class="feature-card"><span class="ico">✈️</span><h3>Telegram (opcional)</h3><p>Pra quem prefere grupo a email.</p></div>
+      <div class="feature-card"><span class="ico">🎨</span><h3>Cores automáticas</h3><p>Atrasado, hoje, em breve — sem configurar nada.</p></div>
+      <div class="feature-card"><span class="ico">⚙️</span><h3>Cresce com você</h3><p>Configuração básica pra uso solo, avançada pra equipe — no mesmo arquivo.</p></div>
+      <div class="feature-card"><span class="ico">🛟</span><h3>Backup automático</h3><p>Antes de qualquer operação em massa, a planilha se protege sozinha.</p></div>
+      <div class="feature-card"><span class="ico">📤</span><h3>Backup por email periódico</h3><p>A cada X dias, você recebe um CSV de tudo — sem precisar lembrar.</p></div>
+      <div class="feature-card"><span class="ico">🔒</span><h3>100% na sua conta Google</h3><p>Nada sai pra servidor externo — os dados são seus, sempre.</p></div>
+    </div>
+    <div class="feature-extra">
+      <div class="item"><h3>Zero tela de "app não verificado"</h3><p>O RADAR usa só os escopos mínimos do Google — nada de alerta assustador na primeira vez que você abrir.</p></div>
+      <div class="item"><h3>Não é só pra engenharia</h3><p>Cliente, obra, consultoria, projeto — funciona pra qualquer tipo de entrega com prazo e responsável.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PREÇO ============ -->
+<section id="preco">
+  <div class="wrap">
+    <span class="eyebrow" style="text-align:center;display:block;">Preço de lançamento</span>
+    <div class="price-card">
+      <ul class="recap">
+        <li>Dashboard automático com 3 visões</li>
+        <li>Notificação individual por email (ou Telegram)</li>
+        <li>Link de WhatsApp pronto por tarefa</li>
+        <li>Cores e status calculados sozinhos</li>
+        <li>Backup automático + backup periódico por email</li>
+        <li>Configuração que cresce de solo pra equipe</li>
+        <li>Zero risco de dado saindo da sua conta Google</li>
+      </ul>
+      <div class="price-tag">Pagamento único</div>
+      <div class="price">R$ 67 <small>sem mensalidade</small></div>
+      <p class="price-sub">Você paga uma vez, usa pra sempre. Atualizações incluídas.</p>
+      <div class="guarantee"><span class="ico">✓</span> Garantia de 7 dias — devolução total, sem burocracia <span style="color:var(--ink-faint)">(CDC art. 49)</span></div>
+      <div class="btn-row"><a class="btn" href="#">Quero parar de cobrar prazo no WhatsApp →</a></div>
+      <!-- trocar href="#" pelo link de checkout da Hotmart -->
+    </div>
+  </div>
+</section>
+
+<!-- ============ PÓS-COMPRA ============ -->
+<section class="alt">
+  <div class="wrap">
+    <h2>Como você recebe</h2>
+    <div class="post-steps">
+      <div class="post-step"><div class="n">01</div><h3>Confirma a compra</h3><p>Você recebe o acesso na hora, no email que usou na Hotmart.</p></div>
+      <div class="post-step"><div class="n">02</div><h3>Copia pra sua conta Google</h3><p>Um clique — o RADAR gera uma cópia inteira na sua própria conta. Nenhum dado passa pela gente.</p></div>
+      <div class="post-step"><div class="n">03</div><h3>Preenche a primeira tarefa</h3><p>Sem instalação, sem configuração de servidor. Abre a planilha e já funciona.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRA QUEM É ============ -->
+<section>
+  <div class="wrap">
+    <h2>Pra quem é / pra quem não é</h2>
+    <div class="fit-grid">
+      <div class="fit-col fit-yes">
+        <h3>É pra você se:</h3>
+        <ul>
+          <li>Você já usa (ou tá disposto a usar) Google Sheets</li>
+          <li>Gerencia mais de um projeto/cliente ao mesmo tempo</li>
+          <li>Cansou de cobrar prazo manualmente</li>
+        </ul>
+      </div>
+      <div class="fit-col fit-no">
+        <h3>Não é pra você se:</h3>
+        <ul>
+          <li>Já usa um sistema completo (Monday, ClickUp) e tá satisfeito</li>
+          <li>Precisa de app mobile nativo — o RADAR é web</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AUTOR ============ -->
+<section class="alt">
+  <div class="wrap">
+    <span class="eyebrow">Quem criou o RADAR</span>
+    <div class="author">
+      <div class="author-photo"><!-- ALT: foto de Gustavo Simonato -->foto</div>
+      <div>
+        <h3>Gustavo Simonato</h3>
+        <p class="handle">@gssimonato — Engenheiro que Automatiza</p>
+        <br>
+        <p>Engenheiro estrutural/civil, <strong style="color:#fff">16 anos de escritório</strong> (6 como estagiário, 10 como profissional). Trabalha com Python, Excel, AutoHotkey e TQS no dia a dia da engenharia estrutural.</p>
+        <br>
+        <p>Criou o RADAR depois de anos vendo o mesmo problema se repetir: escritório técnico sem sistema formal, cobrando prazo por mensagem, perdendo controle toda vez que alguém sai de férias — sem forçar o escritório a trocar de ferramenta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA FINAL ============ -->
+<section class="final-cta">
+  <div class="wrap">
+    <span class="eyebrow" style="display:block;">Se você chegou até aqui</span>
+    <h2>Até quando você vai continuar descobrindo atraso porque o cliente perguntou primeiro?</h2>
+    <p>Você já tentou controlar prazo por WhatsApp, por planilha manual, por "vou lembrar de cobrar" — e o resultado é sempre o mesmo: alguém esquece, o cliente reclama, a confiança cai um degrau.</p>
+    <p>O RADAR não exige trocar de ferramenta nem treinar a equipe do zero. Ele só faz a planilha que vocês já usam avisar sozinha.</p>
+    <div class="btn-row"><a class="btn" href="#preco">R$ 67 — quero parar de cobrar prazo no WhatsApp →</a></div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="alt">
+  <div class="wrap">
+    <h2>Perguntas frequentes</h2>
+    <div class="faq">
+      <div class="faq-item"><h3>Preciso saber programar?</h3><p>Não. Você preenche a planilha normalmente — toda a automação já vem pronta.</p></div>
+      <div class="faq-item"><h3>Meus dados ficam seguros?</h3><p>Sim — o script roda inteiramente dentro da sua própria conta Google. Nada é enviado pra nenhum servidor externo, nem pra gente.</p></div>
+      <div class="faq-item"><h3>Funciona pra qualquer tipo de projeto, ou só engenharia?</h3><p>Qualquer tipo — clientes, obras, consultorias, o que for.</p></div>
+      <div class="faq-item"><h3>E se eu tiver dúvida na instalação?</h3><p>Suporte por email (gsimonato.gss@gmail.com) ou WhatsApp (+55 51 99934-5376).</p></div>
+      <div class="faq-item"><h3>Funciona no celular?</h3><p>Funciona pelo app do Google Sheets, mas a experiência é melhor no computador — é uma planilha, não um app dedicado.</p></div>
+      <div class="faq-item"><h3>Tem mensalidade?</h3><p>Não. Pagamento único, R$67, uso vitalício. Atualizações incluídas.</p></div>
+      <div class="faq-item"><h3>E se eu não gostar?</h3><p>Devolvemos o valor integral em até 7 dias após a compra, sem burocracia.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>RADAR — Gustavo Simonato | Engenheiro que Automatiza — @gssimonato</p>
+  </div>
+</footer>
+
+</body>
+</html>
