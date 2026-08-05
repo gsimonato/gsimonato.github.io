@@ -2,455 +2,458 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RADAR — A planilha que sua equipe já sabe usar, agora automatizada</title>
-<meta name="description" content="RADAR transforma o Google Sheets que sua equipe já usa em um sistema de acompanhamento de prazos, tarefas e responsáveis — com dashboard, emails e Telegram automáticos. Sem trocar de ferramenta.">
-<link rel="canonical" href="https://gsimonato.github.io/RADAR/">
-
-<!-- Favicon -->
-<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
-
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="RADAR — A planilha que sua equipe já sabe usar, agora automatizada">
-<meta property="og:description" content="Continua sendo Google Sheets. Agora com dashboard, emails automáticos e acompanhamento de tarefas.">
-<meta property="og:image" content="https://gsimonato.github.io/RADAR/assets/img/og-image.png">
-<meta property="og:url" content="https://gsimonato.github.io/RADAR/">
-<meta property="og:locale" content="pt_BR">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="RADAR — A planilha que sua equipe já sabe usar, agora automatizada">
-<meta name="twitter:description" content="Continua sendo Google Sheets. Agora com dashboard, emails automáticos e acompanhamento de tarefas.">
-<meta name="twitter:image" content="https://gsimonato.github.io/RADAR/assets/img/og-image.png">
-
-<!-- Schema.org Product -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": "RADAR — Rastreio Automático de Demandas, Atividades e Responsáveis",
-  "description": "Solução construída sobre Google Sheets que adiciona automações de gestão de tarefas, prazos e responsáveis para escritórios de engenharia, arquitetura e consultorias.",
-  "brand": { "@type": "Brand", "name": "Gustavo Simonato" },
-  "offers": {
-    "@type": "Offer",
-    "price": "67.00",
-    "priceCurrency": "BRL",
-    "availability": "https://schema.org/InStock",
-    "url": "https://gsimonato.github.io/RADAR/"
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>RADAR — Pare de Cobrar Prazo por WhatsApp. Deixe a Planilha Cobrar por Você.</title>
+<style>
+  :root{
+    --bg: #0e0f13;
+    --bg-alt: #131419;
+    --card: #1a1c22;
+    --card-border: #262933;
+    --text: #f1f1ef;
+    --muted: #a6a8ae;
+    --gold: #f4b942;
+    --gold-dark: #c8922c;
+    --red: #ff5c5c;
+    --green: #4ade80;
+    --blue: #5eb1ff;
   }
-}
-</script>
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI', Roboto, Arial, sans-serif;
+    line-height:1.55;
+  }
+  img{max-width:100%; display:block; border-radius:10px;}
+  .wrap{max-width:900px; margin:0 auto; padding:0 20px;}
+  .wrap-narrow{max-width:760px; margin:0 auto; padding:0 20px;}
+  section{padding:56px 0;}
+  h1,h2,h3{line-height:1.25; font-weight:800;}
+  h1{font-size:2.1rem;}
+  h2{font-size:1.7rem;}
+  h3{font-size:1.25rem;}
+  strong{color:#fff;}
+  .eyebrow{
+    display:inline-block; font-size:.78rem; font-weight:700; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:10px;
+  }
+  .center{text-align:center;}
+  .muted{color:var(--muted);}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Onest:wght@400;500;600;700&family=Montserrat:wght@600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  /* HEADER */
+  header{padding:22px 0; border-bottom:1px solid var(--card-border);}
+  .logo{font-weight:900; font-size:1.3rem; letter-spacing:.06em; display:flex; align-items:center; gap:8px;}
+  .logo span{color:var(--gold);}
 
-<link rel="stylesheet" href="assets/css/variables.css">
-<link rel="stylesheet" href="assets/css/layout.css">
-<link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/animations.css">
-<link rel="stylesheet" href="assets/css/responsive.css">
+  /* HERO */
+  .hero{padding:60px 0 30px; text-align:center;}
+  .hero h1{max-width:820px; margin:0 auto 18px;}
+  .hero h1 em{color:var(--gold); font-style:normal;}
+  .hero p.sub{max-width:600px; margin:0 auto 26px; color:var(--muted); font-size:1.05rem;}
+  .hero-pills{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:36px;}
+  .pill{
+    background:var(--card); border:1px solid var(--card-border); border-radius:30px;
+    padding:8px 18px; font-size:.9rem; font-weight:600;
+  }
+  .hero-img{max-width:760px; margin:0 auto; border:1px solid var(--card-border); border-radius:14px; overflow:hidden;}
+
+  /* CHECKLIST */
+  .checklist{list-style:none; max-width:640px; margin:0 auto;}
+  .checklist li{
+    display:flex; gap:12px; align-items:flex-start; padding:14px 0;
+    border-bottom:1px solid var(--card-border); font-size:1rem;
+  }
+  .checklist li:last-child{border-bottom:none;}
+  .checklist .ico{color:var(--gold); font-weight:900; flex-shrink:0;}
+  .checklist.ok .ico{color:var(--green);}
+
+  .callout{
+    background:var(--card); border:1px solid var(--card-border); border-left:4px solid var(--gold);
+    border-radius:10px; padding:24px 26px; max-width:700px; margin:34px auto; font-size:1.05rem;
+  }
+
+  /* STEPS */
+  .step{
+    display:grid; grid-template-columns:120px 1fr; gap:26px; align-items:center;
+    max-width:760px; margin:0 auto 34px; background:var(--card); border:1px solid var(--card-border);
+    border-radius:14px; padding:26px;
+  }
+  .step .num{
+    font-size:2.6rem; font-weight:900; color:var(--gold-dark); text-align:center;
+  }
+  .step .eyebrow{margin-bottom:6px;}
+
+  /* FEATURE BLOCKS w/ image */
+  .feature{
+    display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center;
+    max-width:900px; margin:0 auto 60px;
+  }
+  .feature.rev{grid-template-columns:1fr 1fr;}
+  .feature.rev .feature-text{order:2;}
+  .feature.rev .feature-img{order:1;}
+  .feature-img img{border:1px solid var(--card-border);}
+  .feature-text h3{margin-bottom:12px;}
+  .feature-text p{color:var(--muted);}
+
+  /* TABLE */
+  table.compare{width:100%; border-collapse:collapse; max-width:820px; margin:20px auto; font-size:.92rem;}
+  table.compare th, table.compare td{padding:14px 12px; border:1px solid var(--card-border); text-align:left; vertical-align:top;}
+  table.compare th{background:var(--card); color:var(--gold);}
+  table.compare td.ok{color:var(--green); font-weight:700;}
+
+  /* PRICING */
+  .price-box{
+    max-width:600px; margin:30px auto; background:var(--card); border:1px solid var(--gold-dark);
+    border-radius:16px; padding:36px 30px; text-align:center;
+  }
+  .price-items{list-style:none; text-align:left; margin:0 0 22px;}
+  .price-items li{
+    display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed var(--card-border);
+    font-size:.95rem;
+  }
+  .price-items li span:last-child{color:var(--muted);}
+  .old-total{color:var(--muted); text-decoration:line-through; font-size:1.1rem; margin-bottom:4px;}
+  .final-price{font-size:2.4rem; font-weight:900; color:var(--gold); margin:6px 0 2px;}
+  .final-price small{font-size:1rem; color:var(--muted); font-weight:600; display:block;}
+  .cta-btn{
+    display:inline-block; background:var(--gold); color:#181818; font-weight:800; font-size:1.05rem;
+    padding:16px 38px; border-radius:10px; text-decoration:none; margin:18px 0 8px; border:none; cursor:pointer;
+    transition:transform .15s ease;
+  }
+  .cta-btn:hover{transform:translateY(-2px);}
+  .fine{font-size:.82rem; color:var(--muted); margin-top:6px;}
+
+  /* RECEIVE STEPS */
+  .receive{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; max-width:900px; margin:0 auto;}
+  .receive .rcard{background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:24px; text-align:center;}
+  .receive .rcard .num{color:var(--gold); font-weight:900; font-size:1.3rem; margin-bottom:8px;}
+
+  /* AUTHOR */
+  .author{
+    max-width:760px; margin:0 auto; display:flex; gap:26px; align-items:center;
+    background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:30px;
+  }
+  .author .avatar{
+    width:96px; height:96px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+    flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:900; color:#181818;
+  }
+
+  /* FAQ */
+  details{
+    background:var(--card); border:1px solid var(--card-border); border-radius:10px;
+    padding:16px 20px; margin-bottom:12px; max-width:760px; margin-left:auto; margin-right:auto;
+  }
+  summary{cursor:pointer; font-weight:700; list-style:none; display:flex; justify-content:space-between; align-items:center;}
+  summary::-webkit-details-marker{display:none;}
+  summary:after{content:"+"; color:var(--gold); font-size:1.3rem;}
+  details[open] summary:after{content:"–";}
+  details p{margin-top:12px; color:var(--muted);}
+
+  footer{padding:36px 0; border-top:1px solid var(--card-border); text-align:center; font-size:.82rem; color:var(--muted);}
+
+  @media(max-width:760px){
+    .feature, .feature.rev{grid-template-columns:1fr;}
+    .feature.rev .feature-text{order:1;} .feature.rev .feature-img{order:2;}
+    .step{grid-template-columns:1fr; text-align:center;}
+    .receive{grid-template-columns:1fr;}
+    .author{flex-direction:column; text-align:center;}
+    h1{font-size:1.6rem;} h2{font-size:1.4rem;}
+  }
+</style>
 </head>
 <body>
 
-<header class="site-header">
-  <div class="container">
-    <a href="#" class="site-logo">
-      <img src="assets/img/logo.svg" alt="RADAR" width="28" height="28">
-      RADAR
-    </a>
-    <nav class="site-nav" aria-label="Navegação principal">
-      <div class="nav-links">
-        <a href="#como-funciona">Como funciona</a>
-        <a href="#beneficios">Benefícios</a>
-        <a href="#comparativo">Comparativo</a>
-        <a href="#faq">Dúvidas</a>
-      </div>
-      <a href="#preco" class="btn btn-primary" style="margin-left: 1.5rem;">Quero parar de perder prazo</a>
-    </nav>
-    <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
+<header>
+  <div class="wrap logo">📡 RADAR<span>.</span></div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="container hero-grid">
-    <div class="hero-text">
-      <span class="hero-eyebrow">Google Sheets · automatizado</span>
-      <h1>Todo cliente que liga perguntando "como tá o projeto?" é <span class="accent">um prazo que você já perdeu o controle.</span></h1>
-      <p class="hero-sub">O RADAR transforma a planilha que sua equipe já usa em um sistema que cobra prazo sozinho — antes que o cliente precise cobrar você.</p>
-      <div class="hero-cta-row">
-        <a href="#preco" class="btn btn-primary btn-lg">Quero parar de perder prazo</a>
-        <a href="#demonstracao" class="btn btn-ghost btn-lg">Ver funcionando</a>
-      </div>
-      <p class="hero-cta-note" style="margin-top: 1.25rem;">// roda 100% dentro da sua conta Google — sem trocar de ferramenta</p>
+  <div class="wrap">
+    <div class="eyebrow">Rastreio Automático de Demandas, Atividades e Responsáveis</div>
+    <h1>Pare de perguntar <em>"como tá aquela tarefa?"</em> — deixe a planilha cobrar por você.</h1>
+    <p class="sub">A planilha que calcula prazo, cor e prioridade sozinha, e ainda manda o resumo certo pra cada pessoa por email ou Telegram. Sem sistema novo, sem mensalidade, dentro do Google Sheets que seu escritório já usa.</p>
+    <div class="hero-pills">
+      <div class="pill">📊 Dashboard automático</div>
+      <div class="pill">📩 Cobrança automática</div>
+      <div class="pill">🔒 Seus dados, sua conta Google</div>
     </div>
-
-    <div class="hero-media">
-      <div class="cell-demo">
-        <div class="cell-demo-bar">
-          <span class="cell-demo-dot"></span>
-          <span>RADAR — TAREFAS</span>
-        </div>
-        <table class="cell-demo-table">
-          <thead>
-            <tr>
-              <th>Cliente / Projeto</th>
-              <th>Prazo</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Porto Alegre — PE</td>
-              <td>28/06/2026</td>
-              <td><span class="status-pill embreve">Em breve</span></td>
-            </tr>
-            <tr class="cell-demo-row" data-cell-demo-row>
-              <td>Verânopolis — FM</td>
-              <td>05/06/2026</td>
-              <td><span class="status-pill atrasado">Atrasado</span></td>
-            </tr>
-            <tr>
-              <td>Santa Maria — RC</td>
-              <td>12/08/2026</td>
-              <td><span class="status-pill noprazo">No prazo</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <div class="hero-img"><img src="assets/demo-dashboard.gif" alt="Dashboard RADAR atualizando automaticamente"></div>
   </div>
 </section>
 
-<hr class="gridline-divider">
+<!-- PARA VOCÊ QUE -->
+<section>
+  <div class="wrap-narrow center">
+    <h2>Este método é pra você que…</h2>
+  </div>
+  <ul class="checklist wrap-narrow" style="margin-top:26px;">
+    <li><span class="ico">▸</span> Gerencia mais de um projeto ou cliente ao mesmo tempo e perde o fio da meada</li>
+    <li><span class="ico">▸</span> Descobre que uma tarefa está atrasada só quando o cliente liga reclamando</li>
+    <li><span class="ico">▸</span> Já tentou planilha manual, mas ninguém atualiza e o dado fica velho</li>
+    <li><span class="ico">▸</span> Passa parte do dia cobrando prazo por WhatsApp, um por um</li>
+    <li><span class="ico">▸</span> Tem medo de migrar pra um sistema de gestão caro e complicado que a equipe não vai usar</li>
+    <li><span class="ico">▸</span> Já usa (ou toparia usar) Google Sheets no dia a dia</li>
+  </ul>
+  <p class="center muted" style="margin-top:26px; font-weight:700;">Se você se identificou com pelo menos 2 itens, o RADAR foi feito pra você.</p>
+</section>
 
 <!-- DOR -->
-<section class="section-pad" id="dor">
-  <div class="container">
-    <div class="section-head">
-      <span class="section-eyebrow">O problema</span>
-      <h2 class="section-title">Você não tem um problema de planilha. Tem um problema de prazo escondido.</h2>
-      <p class="section-subtitle">Cada uma dessas situações custa cliente, custa retrabalho, custa a sua credibilidade — e você só descobre depois que já aconteceu.</p>
+<section style="background:var(--bg-alt);">
+  <div class="wrap-narrow center">
+    <h2>A real é essa:</h2>
+    <p class="muted" style="margin-top:18px; font-size:1.05rem;">
+      Você monta uma planilha bonita no primeiro dia. Duas semanas depois, ninguém mais atualiza o status.
+      Prazo estourado só aparece quando o cliente já está bravo. E cobrar responsável, um por um, todo dia,
+      é trabalho que ninguém quer fazer — mas alguém tem que fazer.
+    </p>
+    <div class="callout">
+      Enquanto isso não muda, <strong>seu escritório continua reagindo a atraso em vez de evitar atraso.</strong>
+      O RADAR resolve isso automatizando a parte chata: calcular status, montar o dashboard e cobrar quem
+      precisa ser cobrado — todos os dias, sem você precisar lembrar.
+    </div>
+  </div>
+</section>
+
+<!-- 4 PASSOS -->
+<section>
+  <div class="wrap-narrow center" style="margin-bottom:40px;">
+    <h2>Como o RADAR funciona, em 4 passos</h2>
+  </div>
+
+  <div class="step">
+    <div class="num">01</div>
+    <div>
+      <div class="eyebrow">Controle de Tarefas</div>
+      <h3>Preencha a planilha como sempre fez</h3>
+      <p class="muted">Cliente, engenheiro responsável, prazo, tarefa e comentários. O RADAR calcula sozinho o <strong>Status Prazo</strong> (Atrasado, Entrega hoje, Em breve, No prazo) a cada edição, sem fórmula manual, e colore a linha automaticamente.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">02</div>
+    <div>
+      <div class="eyebrow">Dashboard</div>
+      <h3>Veja a carga de cada pessoa em tempo real</h3>
+      <p class="muted">Três visões prontas — por contato, por prazo e por status — atualizadas sozinhas e ordenadas por total decrescente. Você abre e já sabe onde está o gargalo.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">03</div>
+    <div>
+      <div class="eyebrow">Notificações</div>
+      <h3>Cada pessoa recebe só as tarefas dela</h3>
+      <p class="muted">Email individual, ordenado por urgência, com link direto de WhatsApp para o cliente. Quem preferir, recebe o mesmo resumo agrupado no Telegram. Você escolhe o horário e a frequência.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">04</div>
+    <div>
+      <div class="eyebrow">Backup e Configuração</div>
+      <h3>Seus dados protegidos, do seu jeito</h3>
+      <p class="muted">Exportação automática em CSV a cada 14 dias (configurável), backup de segurança antes de qualquer operação em massa, e um painel único pra ajustar status, cargos e frequência — sem mexer em código.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTADOS -->
+<section style="background:var(--bg-alt);">
+  <div class="wrap-narrow center" style="margin-bottom:20px;">
+    <h2>Com o RADAR rodando, você passa a…</h2>
+  </div>
+  <ul class="checklist ok wrap-narrow">
+    <li><span class="ico">✓</span> Saber quem está sobrecarregado antes que o prazo estoure</li>
+    <li><span class="ico">✓</span> Parar de cobrar prazo manualmente, tarefa por tarefa</li>
+    <li><span class="ico">✓</span> Ter um dashboard sempre atualizado, sem montar nada na mão</li>
+    <li><span class="ico">✓</span> Manter todo o histórico e backup sem depender de ninguém lembrar</li>
+    <li><span class="ico">✓</span> Crescer de uso individual pra uso em equipe sem trocar de ferramenta</li>
+    <li><span class="ico">✓</span> Continuar trabalhando dentro do Google Sheets que você já usa</li>
+  </ul>
+</section>
+
+<!-- O QUE VOCÊ RECEBE -->
+<section>
+  <div class="wrap center" style="margin-bottom:50px;">
+    <h2>O que vem dentro do RADAR</h2>
+  </div>
+
+  <div class="wrap">
+    <div class="feature">
+      <div class="feature-img"><img src="assets/demo-cadastro.gif" alt="Cadastro e edição de tarefas no RADAR"></div>
+      <div class="feature-text">
+        <div class="eyebrow">Aba Tarefas</div>
+        <h3>Cadastro simples, cores automáticas</h3>
+        <p>Preencha como qualquer planilha. Status prazo, cor de andamento e alerta de dado incompleto acontecem sozinhos, a cada edição — sem fórmula pra você manter.</p>
+      </div>
     </div>
 
-    <div class="pain-grid">
-      <div class="pain-card">
-        <div class="pain-icon">✕</div>
-        <p><strong>O cliente descobre o atraso antes de você.</strong> Ele liga perguntando, e você corre atrás de uma resposta que já devia estar pronta.</p>
+    <div class="feature rev">
+      <div class="feature-img"><img src="assets/demo-dashboard.gif" alt="Dashboard consolidado do RADAR"></div>
+      <div class="feature-text">
+        <div class="eyebrow">Aba Dashboard</div>
+        <h3>Carga de trabalho visível na hora</h3>
+        <p>Por engenheiro, por prazo e por status — três recortes prontos, ordenados automaticamente, pra você decidir onde apertar sem precisar perguntar pra ninguém.</p>
       </div>
-      <div class="pain-card">
-        <div class="pain-icon">✕</div>
-        <p><strong>Alguém sai de férias e o projeto para.</strong> Ninguém mais sabe em que pé estavam as tarefas dele — e ninguém vai descobrir a tempo.</p>
+    </div>
+
+    <div class="feature">
+      <div class="feature-img"><img src="assets/demo-email.gif" alt="Email automático de tarefas do RADAR"></div>
+      <div class="feature-text">
+        <div class="eyebrow">Notificação por Email</div>
+        <h3>Cada um recebe só o que é dele</h3>
+        <p>Nada de lista com o time inteiro. Email individual, ordenado por severidade, com link de WhatsApp pronto pra falar com o cliente.</p>
       </div>
-      <div class="pain-card">
-        <div class="pain-icon">✕</div>
-        <p><strong>Cobrar prazo virou seu segundo trabalho.</strong> Rotina de WhatsApp, e mesmo assim sempre esquece metade das cobranças.</p>
-      </div>
-      <div class="pain-card">
-        <div class="pain-icon">✕</div>
-        <p><strong>Sua "gestão de tarefas" é decoração.</strong> Uma aba de planilha que ninguém atualiza porque ninguém é obrigado a atualizar.</p>
-      </div>
-      <div class="pain-card">
-        <div class="pain-icon">✕</div>
-        <p><strong>Retrabalho que não devia existir.</strong> Duas pessoas fizeram a mesma coisa porque cada uma achava que era responsabilidade da outra.</p>
-      </div>
-      <div class="pain-card">
-        <div class="pain-icon">✕</div>
-        <p><strong>Reunião inteira só pra descobrir o óbvio.</strong> Informação que devia estar visível em 30 segundos, sem perguntar pra ninguém.</p>
+    </div>
+
+    <div class="feature rev">
+      <div class="feature-img"><img src="assets/demo-telegram.gif" alt="Notificação via Telegram do RADAR"></div>
+      <div class="feature-text">
+        <div class="eyebrow">Notificação por Telegram (opcional)</div>
+        <h3>Pra quem prefere grupo a email</h3>
+        <p>Mesmo resumo, agrupado por severidade, direto no Telegram. Horário e frequência configuráveis pelo painel.</p>
       </div>
     </div>
   </div>
 </section>
 
-<hr class="gridline-divider">
+<!-- DIFERENCIAIS -->
+<section style="background:var(--bg-alt);">
+  <div class="wrap center" style="margin-bottom:30px;">
+    <h2>Por que não é só "mais uma planilha"</h2>
+  </div>
+  <table class="compare wrap">
+    <thead>
+      <tr><th>Alternativa</th><th>Limitação típica</th><th>Com o RADAR</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Planilha manual</td><td>Ninguém atualiza, dado fica velho</td><td class="ok">Status, cor e notificação automáticos</td></tr>
+      <tr><td>Cobrança por WhatsApp</td><td>Sem histórico, fácil esquecer alguém</td><td class="ok">Notificação individual programada + dashboard</td></tr>
+      <tr><td>Monday, ClickUp e afins</td><td>Curva de aprendizado, mensalidade</td><td class="ok">Roda no Sheets, pagamento único, sem treinar equipe</td></tr>
+      <tr><td>Sistemas em nuvem de terceiros</td><td>Seu dado sai do seu controle</td><td class="ok">Fica 100% na sua conta Google</td></tr>
+    </tbody>
+  </table>
+  <p class="center muted wrap" style="margin-top:20px; font-size:.9rem;">
+    Roda inteiramente dentro da sua conta Google — nenhum dado passa por servidor de terceiros, nem pelo desenvolvedor do produto.
+  </p>
+</section>
 
-<!-- SOLUÇÃO -->
-<section class="section-pad section-dark" id="solucao">
-  <div class="container">
-    <div class="section-head center">
-      <span class="section-eyebrow">A virada</span>
-      <h2 class="section-title">Você não precisa de mais disciplina. Precisa que a planilha cobre por você.</h2>
+<!-- OFERTA -->
+<section id="oferta">
+  <div class="wrap-narrow center">
+    <h2>Recapitulando tudo que você recebe</h2>
+  </div>
+  <div class="price-box">
+    <ul class="price-items">
+      <li><span>✅ Planilha RADAR completa (Tarefas + Dashboard)</span><span>incluso</span></li>
+      <li><span>✅ Notificação automática por Email</span><span>incluso</span></li>
+      <li><span>✅ Notificação automática por Telegram</span><span>incluso</span></li>
+      <li><span>✅ Backup e exportação automática em CSV</span><span>incluso</span></li>
+      <li><span>✅ Painel de configuração sem código</span><span>incluso</span></li>
+    </ul>
+    <div class="final-price">10x de R$ 8,05<small>ou R$ 67,00 à vista com desconto</small></div>
+    <p class="fine" style="margin-bottom:6px; font-weight:700; color:var(--gold);">ACESSO VITALÍCIO — você paga uma vez só</p>
+    <a href="#" class="cta-btn">SIM, EU QUERO ORGANIZAR MEU ESCRITÓRIO</a>
+    <p class="fine">Condição especial por tempo limitado</p>
+  </div>
+</section>
+
+<!-- COMO RECEBE -->
+<section style="background:var(--bg-alt);">
+  <div class="wrap center" style="margin-bottom:30px;">
+    <h2>Como você recebe</h2>
+  </div>
+  <div class="receive">
+    <div class="rcard">
+      <div class="num">01</div>
+      <h3>Acesse seu email</h3>
+      <p class="muted">Você recebe o link da sua cópia da planilha RADAR assim que o pagamento é aprovado.</p>
     </div>
+    <div class="rcard">
+      <div class="num">02</div>
+      <h3>Faça a cópia</h3>
+      <p class="muted">Um clique e a planilha vira sua, dentro da sua própria conta Google.</p>
+    </div>
+    <div class="rcard">
+      <div class="num">03</div>
+      <h3>Configure e pronto</h3>
+      <p class="muted">Configuração inicial é única. Depois disso, é só preencher tarefa e deixar o RADAR trabalhar.</p>
+    </div>
+  </div>
+</section>
 
-    <div class="flow-diagram">
-      <div class="flow-node">Google Sheets</div>
-      <span class="flow-arrow">→</span>
-      <div class="flow-node is-primary">RADAR</div>
-      <span class="flow-arrow">→</span>
-      <div class="flow-branches">
-        <div class="flow-node">Dashboard</div>
-        <div class="flow-node">Emails</div>
-        <div class="flow-node">Telegram</div>
-        <div class="flow-node">Backup</div>
+<!-- AUTOR -->
+<section>
+  <div class="wrap-narrow">
+    <div class="author">
+      <div class="avatar">R</div>
+      <div>
+        <h3>[SEU NOME]</h3>
+        <p class="muted" style="margin-top:8px;">
+          [Espaço reservado — inclua aqui 2-3 linhas sobre quem criou o RADAR: experiência com escritórios de
+          engenharia, motivação por trás da ferramenta, e por que ela resolve esse problema na prática.]
+        </p>
       </div>
     </div>
   </div>
 </section>
 
-<hr class="gridline-divider">
-
-<!-- COMO FUNCIONA -->
-<section class="section-pad" id="como-funciona">
-  <div class="container">
-    <div class="section-head">
-      <span class="section-eyebrow">Como funciona</span>
-      <h2 class="section-title">Zero curva de aprendizado. Zero desculpa pra não usar.</h2>
-      <p class="section-subtitle">Você continua preenchendo a mesma planilha de sempre. A cobrança de prazo deixa de depender da sua memória.</p>
-    </div>
-
-    <div class="how-block">
-      <div class="how-text">
-        <span class="how-step-label">PASSO 01</span>
-        <h3>Continua sendo uma planilha.</h3>
-        <p>Cliente, prazo, responsável. Você preenche do jeito que já preenche hoje — nada de tela nova pra aprender.</p>
-      </div>
-      <div class="how-media">
-        <img src="assets/img/demo-cadastro.gif" alt="Preenchimento de tarefa na planilha RADAR" loading="lazy">
-      </div>
-    </div>
-
-    <div class="how-block reverse">
-      <div class="how-text">
-        <span class="how-step-label">PASSO 02</span>
-        <h3>Em segundos, você sabe.</h3>
-        <p>Quem está atrasado. Quem está sobrecarregado. Quais projetos exigem atenção agora — tudo numa tela só.</p>
-      </div>
-      <div class="how-media">
-        <img src="assets/img/demo-dashboard.gif" alt="Dashboard automático do RADAR por engenheiro e por projeto" loading="lazy">
-      </div>
-    </div>
-
-    <div class="how-block">
-      <div class="how-text">
-        <span class="how-step-label">PASSO 03</span>
-        <h3>Cada responsável recebe só as tarefas dele.</h3>
-        <p>Sem cobrar manualmente, sem lista gigante de todo mundo. Cada pessoa vê exatamente o que é dela.</p>
-      </div>
-      <div class="how-media">
-        <img src="assets/img/demo-email.gif" alt="Email automático individual com tarefas pendentes" loading="lazy">
-      </div>
-    </div>
-
-    <div class="how-block reverse">
-      <div class="how-text">
-        <span class="how-step-label">PASSO 04</span>
-        <h3>As mesmas notificações, se preferir por lá.</h3>
-        <p>Pra quem prefere grupo a email, o mesmo alerta chega direto no Telegram.</p>
-      </div>
-      <div class="how-media">
-        <img src="assets/img/demo-telegram.gif" alt="Notificação automática via Telegram" loading="lazy">
-      </div>
-    </div>
+<!-- URGÊNCIA -->
+<section style="background:var(--bg-alt);">
+  <div class="wrap-narrow center">
+    <h2>Até quando você vai continuar cobrando prazo na mão?</h2>
+    <p class="muted" style="margin:18px 0;">
+      A planilha manual não vai se atualizar sozinha. O WhatsApp de cobrança não vai parar de ser necessário.
+      A única coisa que muda isso é automatizar a parte chata — e é exatamente isso que o RADAR faz.
+    </p>
+    <a href="#oferta" class="cta-btn">SIM, EU QUERO ORGANIZAR MEU ESCRITÓRIO</a>
   </div>
 </section>
-
-<hr class="gridline-divider">
-
-<!-- BENEFÍCIOS -->
-<section class="section-pad" id="beneficios" style="background: var(--color-bg-soft);">
-  <div class="container">
-    <div class="section-head center">
-      <span class="section-eyebrow">O que vem incluso</span>
-      <h2 class="section-title">Tudo que falta pra você parar de correr atrás de prazo.</h2>
-    </div>
-
-    <div class="benefit-grid">
-      <div class="benefit-card"><span class="icon">📊</span><h4>Dashboard</h4><p>3 visões automáticas de carga e status</p></div>
-      <div class="benefit-card"><span class="icon">📧</span><h4>Emails</h4><p>Individuais, por responsável</p></div>
-      <div class="benefit-card"><span class="icon">✈️</span><h4>Telegram</h4><p>Notificação opcional em grupo</p></div>
-      <div class="benefit-card"><span class="icon">🛟</span><h4>Backup</h4><p>Automático antes de operações em massa</p></div>
-      <div class="benefit-card"><span class="icon">🔄</span><h4>Atualizações</h4><p>Incluídas, sem custo adicional</p></div>
-      <div class="benefit-card"><span class="icon">💳</span><h4>Sem mensalidade</h4><p>Pagamento único</p></div>
-      <div class="benefit-card"><span class="icon">⚙️</span><h4>Instalação simples</h4><p>Copiar e usar, sem setup longo</p></div>
-      <div class="benefit-card"><span class="icon">🔒</span><h4>100% Google</h4><p>Nada sai da sua conta</p></div>
-    </div>
-  </div>
-</section>
-
-<hr class="gridline-divider">
-
-<!-- COMPARATIVO -->
-<section class="section-pad" id="comparativo">
-  <div class="container">
-    <div class="section-head center">
-      <span class="section-eyebrow">Comparativo</span>
-      <h2 class="section-title">Sua planilha atual só registra. O RADAR age.</h2>
-    </div>
-
-    <table class="compare-table">
-      <thead>
-        <tr>
-          <th>Planilha comum</th>
-          <th class="col-radar">RADAR</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="compare-dash">—</span>Registra informações</td>
-          <td class="col-radar"><span class="compare-check">✓</span>Acompanha tarefas</td>
-        </tr>
-        <tr>
-          <td><span class="compare-dash">—</span>Depende das pessoas lembrarem</td>
-          <td class="col-radar"><span class="compare-check">✓</span>Lembra automaticamente</td>
-        </tr>
-        <tr>
-          <td><span class="compare-dash">—</span>Sem dashboard</td>
-          <td class="col-radar"><span class="compare-check">✓</span>Dashboard pronto</td>
-        </tr>
-        <tr>
-          <td><span class="compare-dash">—</span>Sem notificações</td>
-          <td class="col-radar"><span class="compare-check">✓</span>Emails automáticos</td>
-        </tr>
-        <tr>
-          <td><span class="compare-dash">—</span>Cobrança manual pelo WhatsApp</td>
-          <td class="col-radar"><span class="compare-check">✓</span>Link de WhatsApp pronto, sem cobrar</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<hr class="gridline-divider">
-
-<!-- PRA QUEM É / NÃO É -->
-<section class="section-pad" style="background: var(--color-bg-soft);">
-  <div class="container">
-    <div class="audience-grid">
-      <div class="audience-card">
-        <h3>Pra quem é</h3>
-        <ul class="audience-list">
-          <li><span class="mark-yes">✓</span>Escritórios de engenharia e arquitetura</li>
-          <li><span class="mark-yes">✓</span>Consultorias e pequenas equipes</li>
-          <li><span class="mark-yes">✓</span>Quem já usa (ou toparia usar) Google Sheets</li>
-          <li><span class="mark-yes">✓</span>Quem gerencia mais de um cliente/projeto ao mesmo tempo</li>
-        </ul>
-      </div>
-      <div class="audience-card">
-        <h3>Pra quem não é</h3>
-        <ul class="audience-list">
-          <li><span class="mark-no">✕</span>Quem quer trocar tudo por um ERP</li>
-          <li><span class="mark-no">✕</span>Quem já usa Monday, ClickUp ou similar e está satisfeito</li>
-          <li><span class="mark-no">✕</span>Quem procura aplicativo mobile nativo dedicado</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="gridline-divider">
-
-<!-- DEMONSTRAÇÃO -->
-<section class="section-pad section-dark" id="demonstracao">
-  <div class="container">
-    <div class="section-head center">
-      <span class="section-eyebrow">Demonstração</span>
-      <h2 class="section-title">Dois minutos. Depois disso, você não tem mais desculpa.</h2>
-    </div>
-
-    <div class="demo-video-wrap">
-      <div class="video-embed">
-        <video autoplay muted loop playsinline poster="assets/img/video-poster.jpg">
-          <source src="assets/video/demo-completo.mp4" type="video/mp4">
-        </video>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="gridline-divider">
 
 <!-- FAQ -->
-<section class="section-pad" id="faq" style="background: var(--color-bg-soft);">
-  <div class="container">
-    <div class="section-head center">
-      <span class="section-eyebrow">Dúvidas frequentes</span>
-      <h2 class="section-title">Antes de fechar, responde isso.</h2>
-    </div>
-
-    <div class="faq-list">
-      <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">
-          Preciso saber programar?
-          <span class="faq-icon"></span>
-        </button>
-        <div class="faq-answer"><div class="faq-answer-inner">Não. Você preenche a planilha normalmente — toda a automação já vem pronta.</div></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">
-          Meus dados ficam seguros?
-          <span class="faq-icon"></span>
-        </button>
-        <div class="faq-answer"><div class="faq-answer-inner">Sim — o script roda inteiramente dentro da sua própria conta Google. Nada é enviado pra nenhum servidor externo, nem pra gente.</div></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">
-          Funciona pra qualquer tipo de projeto, ou só engenharia?
-          <span class="faq-icon"></span>
-        </button>
-        <div class="faq-answer"><div class="faq-answer-inner">Qualquer tipo — clientes, obras, consultorias, o que for.</div></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">
-          E se eu tiver dúvida na instalação?
-          <span class="faq-icon"></span>
-        </button>
-        <div class="faq-answer"><div class="faq-answer-inner">Suporte por email — direto com quem desenvolveu o produto: gsimonato.gss@gmail.com</div></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">
-          E se não funcionar pra mim?
-          <span class="faq-icon"></span>
-        </button>
-        <div class="faq-answer"><div class="faq-answer-inner">Garantia incondicional de 7 dias. Se não fizer sentido pro seu escritório, devolução total, sem perguntas.</div></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">
-          Funciona no celular?
-          <span class="faq-icon"></span>
-        </button>
-        <div class="faq-answer"><div class="faq-answer-inner">Funciona pelo app do Google Sheets, mas a experiência é melhor no computador — é uma planilha, não um app dedicado.</div></div>
-      </div>
-    </div>
+<section>
+  <div class="wrap-narrow center" style="margin-bottom:30px;">
+    <h2>Perguntas Frequentes</h2>
   </div>
+
+  <details>
+    <summary>O que é o RADAR?</summary>
+    <p>É uma planilha Google Sheets com automação (Google Apps Script) que calcula prazo e status das suas tarefas automaticamente, monta um dashboard consolidado e avisa cada responsável por email ou Telegram — sem precisar instalar nenhum software.</p>
+  </details>
+  <details>
+    <summary>Preciso saber programar pra usar?</summary>
+    <p>Não. O uso é limitado a preencher a planilha normalmente. A configuração inicial é feita uma vez, pelo painel, sem mexer em código.</p>
+  </details>
+  <details>
+    <summary>Meus dados ficam seguros?</summary>
+    <p>Sim. O RADAR roda 100% dentro da sua conta Google — nenhum dado trafega para servidor externo, nem para o desenvolvedor do produto. Usa apenas permissões não sensíveis do Google.</p>
+  </details>
+  <details>
+    <summary>Funciona pra equipe ou só uso individual?</summary>
+    <p>Os dois. O mesmo arquivo serve tanto pra uso individual simples quanto pra configuração mais granular de equipe — você cresce sem trocar de ferramenta.</p>
+  </details>
+  <details>
+    <summary>Qual é a forma de pagamento?</summary>
+    <p>[Definir: Pix, cartão de crédito parcelado, ou ambos — ajustar conforme o checkout escolhido.]</p>
+  </details>
+  <details>
+    <summary>Como recebo o material?</summary>
+    <p>Assim que o pagamento for aprovado, você recebe por email o link para fazer sua própria cópia da planilha.</p>
+  </details>
+  <details>
+    <summary>E se eu não gostar?</summary>
+    <p>[Definir política de garantia — ex.: reembolso em até 7 dias corridos após a compra, sem burocracia.]</p>
+  </details>
 </section>
 
-<!-- AGITAÇÃO PRÉ-CTA -->
-<section class="section-pad section-dark">
-  <div class="container" style="max-width: 720px; text-align: center;">
-    <p style="font-size: var(--fs-lg); color: var(--color-dark-text); font-weight: 600; margin: 0 0 1rem;">Se você chegou até aqui, já sabe que o problema não é falta de esforço.</p>
-    <p style="font-size: var(--fs-md); margin: 0;">É que cobrar prazo na base da memória não escala. Cada semana que passa sem isso resolvido é mais um cliente perguntando "como tá?", mais uma tarefa que só você lembra que existe.</p>
-  </div>
-</section>
-
-<!-- CTA FINAL -->
-<section class="section-pad" id="preco">
-  <div class="container">
-    <div class="final-cta">
-      <h2>Decide agora, garante o preço de lançamento.</h2>
-      <p>Pagamento único. Sem mensalidade. Sem letra miúda.</p>
-
-      <span class="launch-badge">Preço de lançamento — primeiras compras</span>
-      <div class="price-tag">R$ 67</div>
-      <div class="price-note">atualizações incluídas · pagamento único</div>
-      <div class="guarantee-badge">🛡 garantia incondicional de 7 dias</div>
-      <br>
-      <a href="#" class="btn btn-primary btn-lg">Quero parar de perder prazo</a>
-    </div>
-  </div>
-</section>
-
-<footer class="site-footer">
-  <div class="container">
-    <p>RADAR — desenvolvido por Gustavo Simonato</p>
+<footer>
+  <div class="wrap">
+    Termos de Uso e Política de Privacidade | Copyright © RADAR — [SEU NOME/EMPRESA] — 2026
   </div>
 </footer>
 
-<script src="assets/js/navigation.js"></script>
-<script src="assets/js/faq.js"></script>
-<script src="assets/js/app.js"></script>
-<script src="assets/js/animations.js"></script>
 </body>
 </html>
